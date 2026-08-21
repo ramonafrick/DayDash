@@ -1,0 +1,29 @@
+@inject IStringLocalizer<CalendarResources> Loc
+
+<div class="calendar-month-view">
+    <div class="navigation">
+        <button @onclick="PreviousMonth">@Loc["Previous"]</button>
+        <span>@CurrentMonth.ToString("MMMM yyyy")</span>
+        <button @onclick="NextMonth">@Loc["Next"]</button>
+    </div>
+
+    <div class="month-grid">
+        @foreach (var week in MonthGrid)
+        {
+            <div class="week-row">
+                @foreach (var day in week)
+                {
+                    <div class="day-cell @(day.IsToday ? "today" : "")" @onclick="(() => ShowEventDetails(day.Date))">
+                        <span>@day.Date.Day</span>
+                        <div class="event-dots">
+                            @foreach (var eventType in day.EventTypes)
+                            {
+                                <span class="event-dot" style="background-color: @eventType.Color"></span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

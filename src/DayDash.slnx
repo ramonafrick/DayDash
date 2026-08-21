@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Modules/">
+    <Project Path="Modules/DayDash.Modules.Calendar/DayDash.Modules.Calendar.csproj" />
+    <Project Path="Modules/DayDash.Modules.Camera/DayDash.Modules.Camera.csproj" />
+    <Project Path="Modules/DayDash.Modules.Reminder/DayDash.Modules.Reminder.csproj" />
+    <Project Path="Modules/DayDash.Modules.Storage/DayDash.Modules.Storage.csproj" />
+    <Project Path="Modules/DayDash.Modules.StudyPlanner/DayDash.Modules.StudyPlanner.csproj" />
+    <Project Path="Modules/DayDash.Modules.Widget/DayDash.Modules.Widget.csproj" />
+  </Folder>
+  <Project Path="DayDash.Maui/DayDash.Maui.csproj" />
+  <Project Path="DayDash.Web/DayDash.Web.csproj" />
+</Solution>

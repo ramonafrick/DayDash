@@ -1,0 +1,44 @@
+.calendar-month-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.week-row {
+    display: contents;
+}
+
+.day-cell {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.day-cell.today {
+    background-color: #ffeb3b;
+}
+
+.event-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.event-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    margin: 0 0.1rem;
+}

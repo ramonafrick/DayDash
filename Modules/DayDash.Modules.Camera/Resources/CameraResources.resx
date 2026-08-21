@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="CapturePhoto" xml:space="preserve">
+    <value>Foto aufnehmen</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="ParsedGoals" xml:space="preserve">
+    <value>Erkannte Lernziele</value>
+  </data>
+  <data name="AddRow" xml:space="preserve">
+    <value>Zeile hinzufügen</value>
+  </data>
+  <data name="DeleteRow" xml:space="preserve">
+    <value>Zeile löschen</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+  </data>
+  <data name="SaveGoals" xml:space="preserve">
+    <value>Ziele speichern</value>
+  </data>
+</root>

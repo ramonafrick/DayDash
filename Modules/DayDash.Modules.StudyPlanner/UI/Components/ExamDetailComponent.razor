@@ -1,0 +1,25 @@
+@inject IStringLocalizer<StudyPlannerResources> Loc
+
+<h3>@Loc["ExamDetails"]</h3>
+
+<div>
+    <p>@Loc["Title"]: @Exam.Title</p>
+    <p>@Loc["Subject"]: @Exam.Subject</p>
+    <p>@Loc["ExamDate"]: @Exam.ExamDate</p>
+    <p>@Loc["DaysRemaining"]: @DaysRemaining</p>
+    <p>@Loc["MinutesToday"]: @Exam.DailyMinutes</p>
+</div>
+
+<h4>@Loc["LearningGoals"]</h4>
+<ul>
+    @foreach (var goal in Exam.LearningGoals)
+    {
+        <li>
+            <input type="checkbox" @bind="goal.IsChecked" />
+            @goal.Text
+        </li>
+    }
+</ul>
+
+<button @onclick="EditExam">@Loc["Edit"]</button>
+<button @onclick="DeleteExam">@Loc["Delete"]</button>

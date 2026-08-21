@@ -1,0 +1,17 @@
+@inject IStringLocalizer<CalendarResources> Loc
+
+<div class="event-list">
+    <ul>
+        @foreach (var calendarEvent in Events)
+        {
+            <li @onclick="(() => OnEventSelected.InvokeAsync(calendarEvent))">
+                <span class="event-dot" style="background-color: @calendarEvent.EventTypeColor"></span>
+                <span>@calendarEvent.Title</span>
+                @if (!calendarEvent.IsAllDay)
+                {
+                    <span>@calendarEvent.TimeFrom?.ToString("HH:mm")</span>
+                }
+            </li>
+        }
+    </ul>
+</div>

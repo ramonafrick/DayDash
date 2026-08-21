@@ -1,0 +1,15 @@
+<ItemGroup>
+  <Compile Include="Infrastructure\CalendarRepository.cs" />
+  <Compile Include="Application\Services\CalendarService.cs" />
+</ItemGroup>
+
+<ItemGroup>
+  <Compile Include="UI\Components\CalendarMonthView.razor" />
+  <Compile Include="UI\Components\CalendarMonthView.razor.cs" />
+  <Compile Include="UI\Components\CalendarWeekView.razor" />
+  <Compile Include="UI\Components\CalendarWeekView.razor.cs" />
+  <Compile Include="UI\Components\EventListComponent.razor" />
+  <Compile Include="UI\Components\EventListComponent.razor.cs" />
+  <Compile Include="UI\Components\EventDetailComponent.razor" />
+  <Compile Include="UI\Components\EventDetailComponent.razor.cs" />
+</ItemGroup>

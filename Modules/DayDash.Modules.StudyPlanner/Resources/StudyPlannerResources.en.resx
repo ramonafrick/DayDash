@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="CreateExam" xml:space="preserve">
+    <value>Create Exam</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="ExamDate" xml:space="preserve">
+    <value>Exam Date</value>
+  </data>
+  <data name="TotalStudyMinutes" xml:space="preserve">
+    <value>Total Study Minutes</value>
+  </data>
+  <data name="Recommendation" xml:space="preserve">
+    <value>Recommendation</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ExamDetails" xml:space="preserve">
+    <value>Exam Details</value>
+  </data>
+  <data name="DaysRemaining" xml:space="preserve">
+    <value>Days Remaining</value>
+  </data>
+  <data name="MinutesToday" xml:space="preserve">
+    <value>Minutes Today</value>
+  </data>
+  <data name="LearningGoals" xml:space="preserve">
+    <value>Learning Goals</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SubjectConfig" xml:space="preserve">
+    <value>Subject Configuration</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="AddSubject" xml:space="preserve">
+    <value>Add Subject</value>
+  </data>
+  <data name="TodayStudyPlan" xml:space="preserve">
+    <value>Today's Study Plan</value>
+  </data>
+  <data name="Study" xml:space="preserve">
+    <value>Study</value>
+  </data>
+</root>

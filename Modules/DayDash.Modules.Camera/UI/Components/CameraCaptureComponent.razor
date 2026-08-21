@@ -1,0 +1,20 @@
+@inject IStringLocalizer<CameraResources> Loc
+@inject ICameraService CameraService
+@inject ILearningGoalParser LearningGoalParser
+
+<div>
+    <button @onclick="CapturePhotoAsync" disabled="@IsLoading">
+        @Loc["CapturePhoto"]
+    </button>
+    
+    @if (IsLoading)
+    {
+        <p>@Loc["Loading"]</p>
+    }
+
+    @if (ParsedGoals.Any())
+    {
+        <h3>@Loc["ParsedGoals"]</h3>
+        <LearningGoalEditComponent Goals="ParsedGoals" OnGoalsSaved="HandleGoalsSaved" />
+    }
+</div>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="CreateExam" xml:space="preserve">
+    <value>Prüfung erstellen</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Fach</value>
+  </data>
+  <data name="ExamDate" xml:space="preserve">
+    <value>Prüfungsdatum</value>
+  </data>
+  <data name="TotalStudyMinutes" xml:space="preserve">
+    <value>Gesamtlernzeit (Minuten)</value>
+  </data>
+  <data name="Recommendation" xml:space="preserve">
+    <value>Empfehlung</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuten</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="ExamDetails" xml:space="preserve">
+    <value>Prüfungsdetails</value>
+  </data>
+  <data name="DaysRemaining" xml:space="preserve">
+    <value>Tage verbleibend</value>
+  </data>
+  <data name="MinutesToday" xml:space="preserve">
+    <value>Minuten heute</value>
+  </data>
+  <data name="LearningGoals" xml:space="preserve">
+    <value>Lernziele</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="SubjectConfig" xml:space="preserve">
+    <value>Fachkonfiguration</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="AddSubject" xml:space="preserve">
+    <value>Fach hinzufügen</value>
+  </data>
+  <data name="TodayStudyPlan" xml:space="preserve">
+    <value>Heutiger Lernplan</value>
+  </data>
+  <data name="Study" xml:space="preserve">
+    <value>Lernen</value>
+  </data>
+</root>

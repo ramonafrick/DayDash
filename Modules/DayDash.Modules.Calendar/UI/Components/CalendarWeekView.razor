@@ -1,0 +1,24 @@
+@inject IStringLocalizer<CalendarResources> Loc
+
+<div class="calendar-week-view">
+    <div class="navigation">
+        <button @onclick="PreviousWeek">@Loc["Previous"]</button>
+        <span>@CurrentWeekStart.ToString("dd MMM yyyy") - @CurrentWeekEnd.ToString("dd MMM yyyy")</span>
+        <button @onclick="NextWeek">@Loc["Next"]</button>
+    </div>
+
+    <div class="week-grid">
+        @foreach (var day in WeekDays)
+        {
+            <div class="day-column">
+                <h4>@day.Date.ToString("dddd")</h4>
+                <ul>
+                    @foreach (var calendarEvent in day.Events)
+                    {
+                        <li @onclick="(() => ShowEventDetails(calendarEvent))">@calendarEvent.Title</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
