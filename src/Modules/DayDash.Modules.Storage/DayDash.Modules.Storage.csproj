@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -13,13 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Application\Contracts\IRepository.cs" />
-    <Compile Include="Infrastructure\DayDashDbContext.cs" />
-    <Compile Include="Infrastructure\BaseRepository.cs" />
-    <Compile Include="StorageModuleExtensions.cs" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
   </ItemGroup>
 
 </Project>

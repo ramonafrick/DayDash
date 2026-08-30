@@ -9,6 +9,6 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new MainPage()) { Title = "DayDash.Maui" };
+		return new Window(new AppShell()) { Title = "DayDash" };
 	}
 }

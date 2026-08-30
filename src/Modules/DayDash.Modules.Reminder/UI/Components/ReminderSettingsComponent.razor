@@ -1,0 +1,22 @@
+<div class="reminder-settings">
+    <h3>@Loc["ReminderSettings"]</h3>
+
+    <div>
+        <label>@Loc["DailyStudyReminderTime"]</label>
+        <input type="time" @bind="DailyStudyReminderTime" />
+    </div>
+
+    <div>
+        <label>@Loc["EventReminderDaysBefore"]</label>
+        <input type="number" @bind="EventReminderDaysBefore" min="0" />
+    </div>
+
+    <div>
+        <label>
+            <input type="checkbox" @bind="IsEnabled" />
+            @Loc["IsEnabled"]
+        </label>
+    </div>
+
+    <button @onclick="SaveSettings">@Loc["Save"]</button>
+</div>

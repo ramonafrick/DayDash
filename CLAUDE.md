@@ -16,7 +16,7 @@ The app supports **German (Switzerland)** and **English**. All code is written i
 
 ### Build entire solution
 ```bash
-dotnet build src/DayDash.sln
+dotnet build src/DayDash.slnx
 ```
 
 ### Run MAUI app (Android emulator or device)
@@ -33,12 +33,12 @@ dotnet run
 
 ### Restore dependencies
 ```bash
-dotnet restore src/DayDash.sln
+dotnet restore src/DayDash.slnx
 ```
 
 ### Clean build artifacts
 ```bash
-dotnet clean src/DayDash.sln
+dotnet clean src/DayDash.slnx
 ```
 
 ### EF Core Migrations (run from src/)
@@ -53,7 +53,7 @@ dotnet ef database update --project Modules/DayDash.Modules.Storage
 
 ```
 src/
-├── DayDash.sln
+├── DayDash.slnx
 ├── DayDash.Maui/               # MAUI Host (Blazor Hybrid, Android)
 │   ├── Components/             # Shared Blazor layout components
 │   ├── Pages/                  # XAML pages (shell navigation)

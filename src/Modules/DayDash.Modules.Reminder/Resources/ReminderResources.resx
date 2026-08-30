@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="ReminderSettings" xml:space="preserve">
+    <value>Erinnerungen</value>
+  </data>
+  <data name="DailyStudyReminderTime" xml:space="preserve">
+    <value>Tägliche Lern-Erinnerung</value>
+  </data>
+  <data name="EventReminderDaysBefore" xml:space="preserve">
+    <value>Termin-Erinnerung (Tage vorher)</value>
+  </data>
+  <data name="IsEnabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+</root>

@@ -1,0 +1,21 @@
+@inject IStringLocalizer<CalendarResources> Loc
+
+<div class="calendar-component">
+    <div class="calendar-view-switch">
+        <button class="@(_showWeek ? "" : "active")" @onclick="() => _showWeek = false">@Loc["MonthView"]</button>
+        <button class="@(_showWeek ? "active" : "")" @onclick="() => _showWeek = true">@Loc["WeekView"]</button>
+    </div>
+
+    @if (_showWeek)
+    {
+        <CalendarWeekView />
+    }
+    else
+    {
+        <CalendarMonthView />
+    }
+</div>
+
+@code {
+    private bool _showWeek;
+}

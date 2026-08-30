@@ -1,4 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+using DayDash.Maui.Services;
+using DayDash.Modules.Calendar;
+using DayDash.Modules.Camera;
+using DayDash.Modules.Camera.Application.Contracts;
+using DayDash.Modules.Reminder;
+using DayDash.Modules.Reminder.Application.Contracts;
+using DayDash.Modules.Storage;
+using DayDash.Modules.StudyPlanner;
+using DayDash.Modules.Widget;
+using Microsoft.Extensions.Logging;
 
 namespace DayDash.Maui;
 
@@ -15,12 +24,15 @@ public static class MauiProgram
 			});
 
 		builder.Services.AddMauiBlazorWebView();
-		builder.Services.AddDayDashCamera();
-		builder.Services.AddScoped<ICameraService, MauiCameraService>();
-		builder.Services.AddScoped<IReminderService, MauiReminderService>();
+		builder.Services.AddLocalization();
 
+		// Platform-specific implementations of module contracts.
+		builder.Services.AddSingleton<ICameraService, MauiCameraService>();
+		builder.Services.AddSingleton<IReminderService, MauiReminderService>();
+
+		// Feature modules (each self-registers via its extension method).
 		builder.Services
-			.AddDayDashStorage()
+			.AddDayDashStorage(Path.Combine(FileSystem.AppDataDirectory, "DayDash.db"))
 			.AddDayDashCalendar()
 			.AddDayDashStudyPlanner()
 			.AddDayDashReminder()

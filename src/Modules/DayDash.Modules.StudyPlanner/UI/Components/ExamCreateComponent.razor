@@ -1,0 +1,35 @@
+
+<h3>@Loc["CreateExam"]</h3>
+
+<EditForm Model="_exam" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>@Loc["Title"]</label>
+        <InputText @bind-Value="_exam.Title" />
+    </div>
+
+    <div>
+        <label>@Loc["Subject"]</label>
+        <InputSelect @bind-Value="_exam.Subject">
+            @foreach (var subject in _subjects)
+            {
+                <option value="@subject.Name">@subject.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>@Loc["ExamDate"]</label>
+        <InputDate @bind-Value="_exam.ExamDate" />
+    </div>
+
+    <div>
+        <label>@Loc["TotalStudyMinutes"]</label>
+        <InputNumber @bind-Value="_exam.TotalStudyMinutes" />
+        <span>@Loc["Recommendation"]: @_recommendedMinutes @Loc["Minutes"]</span>
+    </div>
+
+    <button type="submit">@Loc["Save"]</button>
+</EditForm>

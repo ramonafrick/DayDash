@@ -1,0 +1,27 @@
+
+<h3>@Loc["SubjectConfig"]</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>@Loc["Subject"]</th>
+            <th>@Loc["MinutesPerGoal"]</th>
+            <th>@Loc["Actions"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var subject in Subjects)
+        {
+            <tr>
+                <td><InputText @bind-Value="subject.Name" /></td>
+                <td><InputNumber @bind-Value="subject.MinutesPerGoal" /></td>
+                <td>
+                    <button @onclick="() => DeleteSubject(subject)">@Loc["Delete"]</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button @onclick="AddSubject">@Loc["AddSubject"]</button>
+<button @onclick="SaveConfig">@Loc["Save"]</button>

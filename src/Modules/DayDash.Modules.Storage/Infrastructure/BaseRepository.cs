@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DayDash.Modules.Storage.Application.Contracts;
@@ -8,15 +7,17 @@ namespace DayDash.Modules.Storage.Infrastructure;
 
 public class BaseRepository<T> : IRepository<T> where T : class
 {
-    private readonly DayDashDbContext _context;
+    protected readonly DayDashDbContext _context;
 
     public BaseRepository(DayDashDbContext context)
     {
         _context = context;
     }
 
+    public DbContext Context => _context;
+
     public async Task<T?> GetByIdAsync(object id, CancellationToken ct = default)
-        => await _context.Set<T>().FindAsync(new object[] { id }, ct);
+        => await _context.Set<T>().FindAsync(new[] { id }, ct);
 
     public async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default)
         => await _context.Set<T>().ToListAsync(ct);
