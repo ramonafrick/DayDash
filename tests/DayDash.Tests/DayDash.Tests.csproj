@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="bunit" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Settings\DayDash.Modules.Settings.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Storage\DayDash.Modules.Storage.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Calendar\DayDash.Modules.Calendar.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Camera\DayDash.Modules.Camera.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.StudyPlanner\DayDash.Modules.StudyPlanner.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Reminder\DayDash.Modules.Reminder.csproj" />
+    <ProjectReference Include="..\..\src\Modules\DayDash.Modules.Widget\DayDash.Modules.Widget.csproj" />
+    <ProjectReference Include="..\..\src\DayDash.Migrations\DayDash.Migrations.csproj" />
+  </ItemGroup>
+
+</Project>

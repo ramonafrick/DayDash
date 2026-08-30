@@ -15,6 +15,14 @@ public partial class TodayStudyPlanComponent
 
     protected override async Task OnInitializedAsync()
     {
-        TodayPlans = (await StudyPlannerService.GetTodayStudyPlanAsync()).ToList();
+        try
+        {
+            TodayPlans = (await StudyPlannerService.GetTodayStudyPlanAsync()).ToList();
+        }
+        catch (InvalidOperationException)
+        {
+            // No persisted study data yet (model not built until the Storage slice). Show the empty state.
+            TodayPlans = [];
+        }
     }
 }

@@ -73,12 +73,20 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Modules\DayDash.Modules.Settings\DayDash.Modules.Settings.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.Calendar\DayDash.Modules.Calendar.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.Camera\DayDash.Modules.Camera.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.StudyPlanner\DayDash.Modules.StudyPlanner.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.Reminder\DayDash.Modules.Reminder.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.Widget\DayDash.Modules.Widget.csproj" />
       <ProjectReference Include="..\Modules\DayDash.Modules.Storage\DayDash.Modules.Storage.csproj" />
+      <ProjectReference Include="..\DayDash.Migrations\DayDash.Migrations.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- Bridge the Settings RCL's static web assets into the BlazorWebView host. -->
+      <MauiAsset Include="..\Modules\DayDash.Modules.Settings\wwwroot\**\*.*"
+                 LogicalName="_content\DayDash.Modules.Settings\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
 </Project>

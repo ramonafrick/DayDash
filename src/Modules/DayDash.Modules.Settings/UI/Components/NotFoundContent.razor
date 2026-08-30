@@ -1,0 +1,7 @@
+@inherits CultureAwareComponentBase
+@inject IStringLocalizer<NavigationResources> Localizer
+
+<div class="container">
+    <h1 class="page-title">@Localizer["NotFoundTitle"]</h1>
+    <p role="alert" class="text-center">@Localizer["NotFoundMessage"]</p>
+</div>

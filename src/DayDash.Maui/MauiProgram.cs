@@ -1,10 +1,14 @@
 using DayDash.Maui.Services;
+using DayDash.Migrations;
 using DayDash.Modules.Calendar;
 using DayDash.Modules.Camera;
 using DayDash.Modules.Camera.Application.Contracts;
 using DayDash.Modules.Reminder;
 using DayDash.Modules.Reminder.Application.Contracts;
-using DayDash.Modules.Storage;
+using DayDash.Modules.Settings;
+using DayDash.Modules.Settings.Application.Contracts;
+using DayDash.Modules.Storage.Application.Contracts;
+using DayDash.Modules.Storage.Infrastructure;
 using DayDash.Modules.StudyPlanner;
 using DayDash.Modules.Widget;
 using Microsoft.Extensions.Logging;
@@ -25,18 +29,22 @@ public static class MauiProgram
 
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddLocalization();
+		builder.Services.AddSingleton(TimeProvider.System);
 
-		// Platform-specific implementations of module contracts.
-		builder.Services.AddSingleton<ICameraService, MauiCameraService>();
-		builder.Services.AddSingleton<IReminderService, MauiReminderService>();
+		// Platform adapters - registered BEFORE the modules so their fallbacks never win.
+		builder.Services.AddSingleton<IAppPreferences, MauiAppPreferences>();
+		builder.Services.AddSingleton<IFileShareService, MauiFileShareService>();
+		builder.Services.AddScoped<ICameraService, MauiCameraService>();
+		builder.Services.AddScoped<IReminderService, MauiReminderService>();
 
-		// Feature modules (each self-registers via its extension method).
+		// Feature modules - Settings and Storage first (both leaves).
 		builder.Services
-			.AddDayDashStorage(Path.Combine(FileSystem.AppDataDirectory, "DayDash.db"))
+			.AddDayDashSettings()
+			.AddDayDashSqliteStorage(Path.Combine(FileSystem.AppDataDirectory, DayDashDatabase.FileName))
 			.AddDayDashCalendar()
 			.AddDayDashStudyPlanner()
-			.AddDayDashReminder()
 			.AddDayDashCamera()
+			.AddDayDashReminder()
 			.AddDayDashWidget();
 
 #if DEBUG
@@ -44,6 +52,23 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+		var app = builder.Build();
+
+		using (var scope = app.Services.CreateScope())
+		{
+			try
+			{
+				scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>()
+					.InitializeAsync().GetAwaiter().GetResult();
+			}
+			catch (Exception ex)
+			{
+				StartupDiagnostics.DatabaseError = ex;
+				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
+					.LogError(ex, "Database initialization failed");
+			}
+		}
+
+		return app;
 	}
 }

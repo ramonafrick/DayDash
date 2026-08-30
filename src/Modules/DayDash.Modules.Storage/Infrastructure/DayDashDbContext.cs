@@ -1,17 +1,27 @@
+using DayDash.Modules.Storage.Application.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DayDash.Modules.Storage.Infrastructure;
 
 /// <summary>
-/// Shared EF Core context for all modules. It is deliberately entity-agnostic so the
-/// Storage module has no compile-time dependency on the feature modules (which would
-/// otherwise create a circular reference). Entity types are discovered at runtime via
-/// <see cref="DbContext.Set{TEntity}()"/> and their navigation properties.
+/// Shared EF Core context for all modules. It carries no <c>DbSet</c> properties: the model is
+/// assembled from <see cref="IModelConfiguration"/> contributions supplied by the feature
+/// modules, so the Storage module never references them (avoids a circular dependency —
+/// see <c>docs/20260830_plan.md</c>, AD-1). Access entities via <see cref="DbContext.Set{TEntity}()"/>.
 /// </summary>
-public class DayDashDbContext : DbContext
+public class DayDashDbContext(
+    DbContextOptions<DayDashDbContext> options,
+    IEnumerable<IModelConfiguration> modelConfigurations) : DbContext(options)
 {
-    public DayDashDbContext(DbContextOptions<DayDashDbContext> options)
-        : base(options)
+    private readonly IEnumerable<IModelConfiguration> _modelConfigurations = modelConfigurations;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        foreach (var configuration in _modelConfigurations)
+        {
+            configuration.Apply(modelBuilder);
+        }
     }
 }
