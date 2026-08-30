@@ -1,0 +1,27 @@
+@inherits CultureAwareComponentBase
+@inject IStringLocalizer<SettingsResources> Localizer
+
+<div class="settings-page container">
+    <h1 class="page-title">@Localizer["SettingsTitle"]</h1>
+
+    <div class="card mb-xl">
+        <LanguageSelectorComponent />
+    </div>
+
+    <div class="card">
+        <nav class="settings-links">
+            <a href="settings/event-types">
+                <span class="material-symbols-outlined" aria-hidden="true">event</span>
+                @Localizer["EventTypeSettings"]
+            </a>
+            <a href="settings/subjects">
+                <span class="material-symbols-outlined" aria-hidden="true">school</span>
+                @Localizer["SubjectSettings"]
+            </a>
+            <a href="settings/reminders">
+                <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+                @Localizer["ReminderSettings"]
+            </a>
+        </nav>
+    </div>
+</div>

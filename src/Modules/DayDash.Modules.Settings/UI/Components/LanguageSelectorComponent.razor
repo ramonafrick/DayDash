@@ -1,0 +1,10 @@
+@inherits CultureAwareComponentBase
+@inject IStringLocalizer<SettingsResources> Localizer
+
+<div class="form-group">
+    <label for="language-select">@Localizer["Language"]</label>
+    <select id="language-select" class="form-select" value="@_selected" @onchange="OnLanguageChangedAsync">
+        <option value="@SupportedCultures.Default">@Localizer["LanguageGerman"]</option>
+        <option value="@SupportedCultures.English">@Localizer["LanguageEnglish"]</option>
+    </select>
+</div>

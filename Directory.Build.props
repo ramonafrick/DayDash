@@ -1,0 +1,15 @@
+<Project>
+
+  <!--
+    Repo-wide build defaults. Kept deliberately small: the MAUI workload targets
+    are sensitive to aggressive root props (see docs/20260830_plan.md, R8).
+  -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <NeutralResourcesLanguage>de-CH</NeutralResourcesLanguage>
+  </PropertyGroup>
+
+</Project>

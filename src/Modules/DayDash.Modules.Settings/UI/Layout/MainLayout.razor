@@ -1,0 +1,39 @@
+@inherits CultureAwareLayoutComponentBase
+@inject IStringLocalizer<NavigationResources> Localizer
+
+<div class="page">
+    <button class="hamburger-btn" @onclick="ToggleMobileMenu" aria-label="@Localizer["ToggleNavigation"]">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+
+    <div class="sidebar-overlay @(_isMobileMenuOpen ? "active" : "")" @onclick="CloseMobileMenu"></div>
+
+    <div class="sidebar @(_isMobileMenuOpen ? "mobile-open" : "")">
+        <NavMenu OnNavLinkClick="CloseMobileMenu" />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="calendar" class="mobile-logo">
+                <img src="_content/DayDash.Modules.Settings/img/daydash-logo.svg" alt="@Localizer["BrandName"]" class="mobile-logo-icon" />
+            </a>
+            <a href="settings">@Localizer["Settings"]</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+
+    <ThemeToggle />
+</div>
+
+@code {
+    private bool _isMobileMenuOpen;
+
+    private void ToggleMobileMenu() => _isMobileMenuOpen = !_isMobileMenuOpen;
+
+    private void CloseMobileMenu() => _isMobileMenuOpen = false;
+}

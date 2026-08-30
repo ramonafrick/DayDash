@@ -1,0 +1,8 @@
+@inherits CultureAwareComponentBase
+@inject IStringLocalizer<SettingsResources> Localizer
+
+<div class="theme-toggle">
+    <button class="theme-toggle-btn" @onclick="ToggleThemeAsync" title="@ToggleTitle">
+        <span class="theme-icon">@(_currentTheme == "light" ? "🌙" : "☀️")</span>
+    </button>
+</div>
