@@ -12,6 +12,7 @@ public static class SettingsModuleExtensions
     public static IServiceCollection AddDayDashSettings(this IServiceCollection services)
     {
         services.AddSingleton<CultureStateService>();
+        services.AddSingleton<StartupState>();
         services.AddLocalization();
         return services;
     }

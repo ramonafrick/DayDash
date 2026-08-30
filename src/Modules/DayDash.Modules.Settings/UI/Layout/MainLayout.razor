@@ -1,5 +1,7 @@
 @inherits CultureAwareLayoutComponentBase
 @inject IStringLocalizer<NavigationResources> Localizer
+@inject IStringLocalizer<SettingsResources> SettingsLoc
+@inject StartupState Startup
 
 <div class="page">
     <button class="hamburger-btn" @onclick="ToggleMobileMenu" aria-label="@Localizer["ToggleNavigation"]">
@@ -23,6 +25,13 @@
         </div>
 
         <article class="content px-4">
+            @if (Startup.HasDatabaseError)
+            {
+                <div class="alert alert-error" role="alert">
+                    <strong>@SettingsLoc["DatabaseErrorTitle"]</strong>
+                    <p class="mb-0">@SettingsLoc["DatabaseErrorMessage"]</p>
+                </div>
+            }
             @Body
         </article>
     </main>

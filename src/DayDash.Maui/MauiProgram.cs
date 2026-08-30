@@ -7,6 +7,7 @@ using DayDash.Modules.Reminder;
 using DayDash.Modules.Reminder.Application.Contracts;
 using DayDash.Modules.Settings;
 using DayDash.Modules.Settings.Application.Contracts;
+using DayDash.Modules.Settings.Application.Services;
 using DayDash.Modules.Storage.Application.Contracts;
 using DayDash.Modules.Storage.Infrastructure;
 using DayDash.Modules.StudyPlanner;
@@ -63,7 +64,7 @@ public static class MauiProgram
 			}
 			catch (Exception ex)
 			{
-				StartupDiagnostics.DatabaseError = ex;
+				app.Services.GetRequiredService<StartupState>().DatabaseError = ex;
 				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
 					.LogError(ex, "Database initialization failed");
 			}

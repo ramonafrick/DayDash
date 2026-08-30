@@ -1,4 +1,3 @@
-using System.Globalization;
 using DayDash.Modules.Settings.Application.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -13,13 +12,14 @@ public abstract class CultureAwareComponentBase : ComponentBase, IDisposable
 {
     [Inject] protected CultureStateService CultureState { get; set; } = null!;
 
+    private CultureChangeSubscription? _subscription;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        CultureState.CultureChanged += OnCultureChanged;
+        _subscription = new CultureChangeSubscription(CultureState, () => InvokeAsync(StateHasChanged));
+        _subscription.Start();
     }
 
-    private void OnCultureChanged(object? sender, CultureInfo culture) => InvokeAsync(StateHasChanged);
-
-    public virtual void Dispose() => CultureState.CultureChanged -= OnCultureChanged;
+    public virtual void Dispose() => _subscription?.Dispose();
 }

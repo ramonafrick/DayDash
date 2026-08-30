@@ -6,6 +6,7 @@ using DayDash.Modules.Reminder;
 using DayDash.Modules.Settings;
 using DayDash.Modules.Settings.Application.Contracts;
 using DayDash.Modules.Settings.Application.Services;
+using DayDash.Modules.Settings.UI.Components;
 using DayDash.Modules.Storage;
 using DayDash.Modules.Storage.Application.Contracts;
 using DayDash.Modules.StudyPlanner;
@@ -50,7 +51,15 @@ CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 using (var scope = host.Services.CreateScope())
 {
-    await scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>().InitializeAsync();
+    try
+    {
+        await scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>().InitializeAsync();
+    }
+    catch (Exception ex)
+    {
+        // Preview host must still start (FR-P4); MainLayout shows a localized banner.
+        host.Services.GetRequiredService<StartupState>().DatabaseError = ex;
+    }
 }
 
 await host.RunAsync();

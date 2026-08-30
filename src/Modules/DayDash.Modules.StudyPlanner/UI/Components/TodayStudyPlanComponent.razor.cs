@@ -19,9 +19,11 @@ public partial class TodayStudyPlanComponent
         {
             TodayPlans = (await StudyPlannerService.GetTodayStudyPlanAsync()).ToList();
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex) when (ex.Message.Contains("cannot be used for entity type", StringComparison.Ordinal)
+                                                   || ex.Message.Contains("was not found in the model", StringComparison.Ordinal))
         {
-            // No persisted study data yet (model not built until the Storage slice). Show the empty state.
+            // The persistence model is not assembled until the Storage slice - show the empty state.
+            // TODO(Slice 3): remove this guard once the StudyPlanner model exists.
             TodayPlans = [];
         }
     }
