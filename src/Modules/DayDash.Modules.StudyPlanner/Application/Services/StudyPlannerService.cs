@@ -1,65 +1,50 @@
 using DayDash.Modules.StudyPlanner.Application.Contracts;
 using DayDash.Modules.StudyPlanner.Domain;
-using Microsoft.Extensions.Logging;
 
 namespace DayDash.Modules.StudyPlanner.Application.Services;
 
-public class StudyPlannerService(IExamRepository examRepository, ILogger<StudyPlannerService> logger) : IStudyPlannerService
+public class StudyPlannerService(
+    IExamRepository examRepository,
+    ISubjectConfigRepository subjectRepository,
+    TimeProvider timeProvider) : IStudyPlannerService
 {
-    private readonly IExamRepository _examRepository = examRepository;
-    private readonly ILogger<StudyPlannerService> _logger = logger;
-
+    // Per-subject MinutesPerGoal is applied in Slice 3 (needs an async lookup); for now every
+    // subject uses the default rate.
     public int CalculateRecommendedMinutes(int goalCount, string subject)
-    {
-        // Assuming SubjectConfig is fetched elsewhere
-        var subjectConfig = SubjectConfig.DefaultSubjects.FirstOrDefault(s => s.Name == subject);
-        return goalCount * (subjectConfig?.MinutesPerGoal ?? 15);
-    }
+        => goalCount * SubjectConfig.DefaultMinutesPerGoal;
 
     public int CalculateDailyMinutes(int totalMinutes, DateOnly examDate)
     {
-        var daysUntilExam = Math.Max((examDate.ToDateTime(TimeOnly.MinValue) - DateTime.Today).Days, 1);
+        var today = DateOnly.FromDateTime(timeProvider.GetLocalNow().Date);
+        var daysUntilExam = Math.Max(examDate.DayNumber - today.DayNumber, 1);
         return totalMinutes / daysUntilExam;
     }
 
     public async Task<IReadOnlyList<Exam>> GetTodayStudyPlanAsync(CancellationToken ct = default)
     {
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var exams = await _examRepository.GetUpcomingAsync(30, ct);
-
-        return exams
-            .Where(e => e.DailyMinutes > 0 && e.ExamDate >= today)
-            .ToList();
+        var today = DateOnly.FromDateTime(timeProvider.GetLocalNow().Date);
+        var exams = await examRepository.GetUpcomingAsync(30, ct);
+        return exams.Where(e => e.DailyMinutes > 0 && e.ExamDate >= today).ToList();
     }
 
     public async Task<IReadOnlyList<SubjectConfig>> GetSubjectConfigsAsync(CancellationToken ct = default)
-    {
-        // Assuming fetching from DbContext
-        return SubjectConfig.DefaultSubjects;
-    }
+        => await subjectRepository.GetAllAsync(ct);
 
-    public async Task SaveSubjectConfigAsync(SubjectConfig config, CancellationToken ct = default)
-    {
-        // Save logic here
-        _logger.LogInformation("SubjectConfig saved: {Config}", config);
-    }
+    public Task SaveSubjectConfigAsync(SubjectConfig config, CancellationToken ct = default)
+        => subjectRepository.UpsertAsync(config, ct);
 
-    public async Task CreateExamAsync(Exam exam, CancellationToken ct = default)
-    {
-        await _examRepository.AddAsync(exam, ct);
-    }
+    public Task CreateExamAsync(Exam exam, CancellationToken ct = default)
+        => examRepository.AddAsync(exam, ct);
 
-    public async Task UpdateExamAsync(Exam exam, CancellationToken ct = default)
-    {
-        await _examRepository.UpdateAsync(exam, ct);
-    }
+    public Task UpdateExamAsync(Exam exam, CancellationToken ct = default)
+        => examRepository.UpdateAsync(exam, ct);
 
     public async Task DeleteExamAsync(Guid examId, CancellationToken ct = default)
     {
-        var exam = await _examRepository.GetByIdAsync(examId, ct);
+        var exam = await examRepository.GetByIdAsync(examId, ct);
         if (exam is not null)
         {
-            await _examRepository.DeleteAsync(exam, ct);
+            await examRepository.DeleteAsync(exam, ct);
         }
     }
 }

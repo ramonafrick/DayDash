@@ -30,4 +30,22 @@
   <data name="EventDetails" xml:space="preserve">
     <value>Event Details</value>
   </data>
+  <data name="DefaultEventType_Exam" xml:space="preserve">
+    <value>Exam</value>
+  </data>
+  <data name="DefaultEventType_Homework" xml:space="preserve">
+    <value>Homework</value>
+  </data>
+  <data name="DefaultEventType_Holidays" xml:space="preserve">
+    <value>School holidays</value>
+  </data>
+  <data name="DefaultEventType_Birthday" xml:space="preserve">
+    <value>Birthday</value>
+  </data>
+  <data name="DefaultEventType_Appointment" xml:space="preserve">
+    <value>Appointment</value>
+  </data>
+  <data name="DefaultEventType_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
 </root>

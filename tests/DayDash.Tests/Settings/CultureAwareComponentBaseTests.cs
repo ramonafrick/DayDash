@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DayDash.Tests.Settings;
 
-public class CultureAwareComponentBaseTests
+public class CultureAwareComponentBaseTests : CultureIsolatedTest
 {
     private sealed class Probe : CultureAwareComponentBase
     {

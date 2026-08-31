@@ -5,7 +5,11 @@
         @foreach (var calendarEvent in Events)
         {
             <li @onclick="(() => OnEventSelected.InvokeAsync(calendarEvent))">
-                <span class="event-type">@calendarEvent.EventType</span>
+                @if (calendarEvent.EventType is not null)
+                {
+                    <span class="event-dot" style="background-color:@calendarEvent.EventType.Color"></span>
+                    <span class="event-type">@calendarEvent.EventType.Name</span>
+                }
                 <span>@calendarEvent.Title</span>
                 @if (!calendarEvent.IsAllDay)
                 {

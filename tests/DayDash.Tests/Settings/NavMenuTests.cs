@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DayDash.Tests.Settings;
 
-public class NavMenuTests
+public class NavMenuTests : CultureIsolatedTest
 {
     [Fact]
     public void Renders_the_four_DayDash_nav_links()

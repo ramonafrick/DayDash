@@ -57,4 +57,19 @@
   <data name="Study" xml:space="preserve">
     <value>Study</value>
   </data>
+  <data name="DefaultSubject_Math" xml:space="preserve">
+    <value>Mathematics</value>
+  </data>
+  <data name="DefaultSubject_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="DefaultSubject_Nmg" xml:space="preserve">
+    <value>NMG</value>
+  </data>
+  <data name="DefaultSubject_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="DefaultSubject_French" xml:space="preserve">
+    <value>French</value>
+  </data>
 </root>

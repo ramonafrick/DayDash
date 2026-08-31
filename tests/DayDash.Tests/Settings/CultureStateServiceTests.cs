@@ -1,11 +1,12 @@
 using System.Globalization;
 using DayDash.Modules.Settings.Application.Services;
 using Microsoft.Extensions.Logging.Abstractions;
+using DayDash.Tests.Infrastructure;
 using Xunit;
 
 namespace DayDash.Tests.Settings;
 
-public class CultureStateServiceTests
+public class CultureStateServiceTests : CultureIsolatedTest
 {
     private static CultureStateService NewService() => new(NullLogger<CultureStateService>.Instance);
 
