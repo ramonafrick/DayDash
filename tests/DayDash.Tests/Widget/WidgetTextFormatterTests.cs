@@ -81,8 +81,12 @@ public class WidgetTextFormatterTests : IDisposable
         var snapshot = new WidgetMonthSnapshot(2026, 3, days, [12]);
 
         var grid = WidgetTextFormatter.MonthGrid(snapshot);
+        var lines = grid.Split('\n');
 
-        Assert.Equal(7, grid.Split('\n').Length);
-        Assert.StartsWith("Mo Di Mi", grid);
+        Assert.Equal(7, lines.Length);
+        Assert.StartsWith("Mo", lines[0]);
+        Assert.Contains("Di", lines[0]);
+        Assert.Contains("12*", grid); // event day is marked
+        Assert.Equal(lines[0].Length, lines[1].Length); // header aligns with a full week row
     }
 }

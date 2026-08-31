@@ -14,6 +14,10 @@ namespace DayDash.Modules.Widget.Application.Services;
 /// </summary>
 public sealed class WidgetDataService(DayDashDbContext context, TimeProvider timeProvider) : IWidgetDataService
 {
+    // Widgets have a fixed height - cap every list so a busy day can't overflow the TextView.
+    private const int DayListCap = 6;
+    private const int WeekListCap = 20;
+
     private DateOnly Today => DateOnly.FromDateTime(timeProvider.GetLocalNow().Date);
 
     public async Task<WidgetDaySnapshot> GetDayAsync(CancellationToken ct = default)
@@ -24,6 +28,7 @@ public sealed class WidgetDataService(DayDashDbContext context, TimeProvider tim
             .Where(e => e.Date == today)
             .OrderByDescending(e => e.IsAllDay).ThenBy(e => e.TimeFrom).ThenBy(e => e.Title)
             .Select(e => new WidgetEventItem(e.Title, e.Date, e.TimeFrom, e.IsAllDay))
+            .Take(DayListCap)
             .ToListAsync(ct);
 
         var nextEvent = await context.Set<CalendarEvent>().AsNoTracking()
@@ -36,6 +41,7 @@ public sealed class WidgetDataService(DayDashDbContext context, TimeProvider tim
             .Where(x => x.DailyMinutes > 0 && x.ExamDate >= today)
             .OrderBy(x => x.ExamDate)
             .Select(x => new WidgetStudyItem(x.Subject, x.DailyMinutes))
+            .Take(DayListCap)
             .ToListAsync(ct);
 
         return new WidgetDaySnapshot(today, todaysEvents, nextEvent, study, study.Sum(s => s.Minutes));
@@ -50,6 +56,7 @@ public sealed class WidgetDataService(DayDashDbContext context, TimeProvider tim
             .Where(e => e.Date >= weekStart && e.Date < weekEnd)
             .OrderBy(e => e.Date).ThenByDescending(e => e.IsAllDay).ThenBy(e => e.TimeFrom)
             .Select(e => new WidgetEventItem(e.Title, e.Date, e.TimeFrom, e.IsAllDay))
+            .Take(WeekListCap)
             .ToListAsync(ct);
 
         return new WidgetWeekSnapshot(weekStart, events);

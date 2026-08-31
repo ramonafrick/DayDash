@@ -19,6 +19,14 @@ public sealed class AndroidWidgetRefreshHandler : IDataChangeHandler
 
     public Task HandleAsync(DataChange change, CancellationToken ct = default)
     {
+        // Only event / exam changes alter what the widgets show.
+        if (change.Kind is DataChangeKind.SubjectConfigChanged
+            or DataChangeKind.ReminderConfigChanged
+            or DataChangeKind.EventTypeChanged)
+        {
+            return Task.CompletedTask;
+        }
+
         var context = global::Android.App.Application.Context;
         var manager = AppWidgetManager.GetInstance(context);
         if (manager is null)

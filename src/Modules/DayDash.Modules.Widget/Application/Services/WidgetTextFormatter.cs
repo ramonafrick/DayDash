@@ -33,7 +33,7 @@ public static class WidgetTextFormatter
     {
         if (snapshot is null)
         {
-            return string.Empty;
+            return WidgetResources.DataUnavailable;
         }
 
         if (snapshot.Study.Count == 0)
@@ -70,8 +70,9 @@ public static class WidgetTextFormatter
             return WidgetResources.DataUnavailable;
         }
 
+        // Fixed 3-char cells so the monospaced header lines up with the columns.
         var sb = new StringBuilder();
-        sb.AppendLine(string.Join(" ", WidgetResources.WeekdayHeadings.Select(h => h.Length >= 2 ? h[..2] : h.PadRight(2))));
+        sb.AppendLine(string.Join(" ", WidgetResources.WeekdayHeadings.Select(h => (h.Length >= 2 ? h[..2] : h).PadRight(3))));
 
         for (var week = 0; week < 6; week++)
         {
@@ -82,8 +83,14 @@ public static class WidgetTextFormatter
                     return "   ";
                 }
 
-                var marker = d.HasEvents ? "*" : d.IsToday ? "." : " ";
-                return $"{d.Date.Day,2}{marker}";
+                var marker = (d.IsToday, d.HasEvents) switch
+                {
+                    (true, true) => "+",
+                    (true, false) => ".",
+                    (false, true) => "*",
+                    _ => " ",
+                };
+                return $"{d.Date.Day,-2}{marker}";
             });
             sb.AppendLine(string.Join(" ", cells));
         }

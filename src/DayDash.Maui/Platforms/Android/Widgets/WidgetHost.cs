@@ -6,6 +6,7 @@ using DayDash.Modules.Storage.Infrastructure;
 using DayDash.Modules.Widget.Application.Contracts;
 using DayDash.Modules.Widget.Application.Services;
 using DayDash.Modules.Widget.Resources;
+using Microsoft.EntityFrameworkCore;
 
 namespace DayDash.Maui.Platforms.Android;
 
@@ -41,6 +42,11 @@ internal static class WidgetHost
             }
 
             using var db = DayDashDbContextFactory.CreateSqlite(path, readOnly: true);
+
+            // Wait (rather than fail) if the app is mid-write when a data-change broadcast
+            // fires this update - otherwise the widget would flash its "no data" state.
+            db.Database.ExecuteSqlRaw("PRAGMA busy_timeout = 3000;");
+
             var service = new WidgetDataService(db, TimeProvider.System);
             return query(service).GetAwaiter().GetResult();
         }
