@@ -14,22 +14,7 @@ public partial class TodayStudyPlanComponent
     private IReadOnlyList<Exam> _plan = [];
     private int _totalMinutes;
 
-    [Parameter] public int RefreshToken { get; set; }
-
-    private int _lastRefreshToken;
-
-    protected override async Task OnInitializedAsync() => await ReloadAsync();
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (RefreshToken != _lastRefreshToken)
-        {
-            _lastRefreshToken = RefreshToken;
-            await ReloadAsync();
-        }
-    }
-
-    private async Task ReloadAsync()
+    protected override async Task OnInitializedAsync()
     {
         _plan = await StudyPlanner.GetTodayStudyPlanAsync();
         _totalMinutes = _plan.Sum(e => e.DailyMinutes);

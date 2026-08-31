@@ -168,4 +168,7 @@
   <data name="Days" xml:space="preserve">
     <value>days</value>
   </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Save failed</value>
+  </data>
 </root>

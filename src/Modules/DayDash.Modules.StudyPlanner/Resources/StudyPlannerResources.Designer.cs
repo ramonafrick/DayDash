@@ -73,4 +73,5 @@ public class StudyPlannerResources
     public static string SubjectDeletedFallback => ResourceManager.GetString("SubjectDeletedFallback", Culture) ?? "SubjectDeletedFallback";
     public static string Saved => ResourceManager.GetString("Saved", Culture) ?? "Saved";
     public static string Days => ResourceManager.GetString("Days", Culture) ?? "Days";
+    public static string SaveFailed => ResourceManager.GetString("SaveFailed", Culture) ?? "SaveFailed";
 }

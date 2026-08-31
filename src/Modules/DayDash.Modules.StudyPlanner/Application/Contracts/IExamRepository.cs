@@ -13,6 +13,9 @@ public interface IExamRepository : IRepository<Exam>
     /// <summary>Exams whose date is within the next <paramref name="days"/> days (a window, not a row count).</summary>
     Task<IReadOnlyList<Exam>> GetUpcomingAsync(int days, CancellationToken ct = default);
 
-    /// <summary>The exam with its goals, tracked (for edit / goal toggling).</summary>
+    /// <summary>The exam with its goals, read-only (for display / editing a copy).</summary>
+    Task<Exam?> ReadOneAsync(Guid examId, CancellationToken ct = default);
+
+    /// <summary>The exam with its goals, tracked (for applying an update).</summary>
     Task<Exam?> GetWithGoalsAsync(Guid examId, CancellationToken ct = default);
 }

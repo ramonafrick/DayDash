@@ -24,6 +24,9 @@ public class ExamRepository(DayDashDbContext context, TimeProvider timeProvider)
             .ToListAsync(ct);
     }
 
+    public async Task<Exam?> ReadOneAsync(Guid examId, CancellationToken ct = default)
+        => await ReadGoals().FirstOrDefaultAsync(e => e.Id == examId, ct);
+
     public async Task<Exam?> GetWithGoalsAsync(Guid examId, CancellationToken ct = default)
         => await _context.Set<Exam>()
             .Include(e => e.LearningGoals.OrderBy(g => g.SortOrder))

@@ -45,6 +45,41 @@ public class LearningGoalPersistenceTests
     }
 
     [Fact]
+    public async Task UpdateExam_removes_goals_the_user_deleted_and_keeps_the_rest()
+    {
+        await using var f = new SqliteDbContextFixture();
+        var host = new StudyPlannerHost(f);
+        var keep = new LearningGoal { Id = Guid.NewGuid(), Text = "keep me" };
+        var drop = new LearningGoal { Id = Guid.NewGuid(), Text = "delete me" };
+        var exam = TestData.AnExam();
+        exam.LearningGoals = [keep, drop];
+        var id = await host.Service.CreateExamAsync(exam);
+        f.Context.ChangeTracker.Clear();
+
+        // A detached snapshot as the UI would send it: "drop" removed, "keep" edited, one new.
+        await host.Service.UpdateExamAsync(new DayDash.Modules.StudyPlanner.Domain.Exam
+        {
+            Id = id,
+            Title = "Renamed",
+            Subject = "Deutsch",
+            ExamDate = new DateOnly(2026, 4, 1),
+            TotalStudyMinutes = 100,
+            LearningGoals =
+            [
+                new LearningGoal { Id = keep.Id, Text = "keep me (edited)" },
+                new LearningGoal { Id = Guid.Empty, Text = "brand new" },
+            ],
+        });
+        f.Context.ChangeTracker.Clear();
+
+        var goals = await f.Context.Set<LearningGoal>().Where(g => g.ExamId == id).OrderBy(g => g.SortOrder).ToListAsync();
+        Assert.Equal(new[] { "keep me (edited)", "brand new" }, goals.Select(g => g.Text));
+        Assert.Equal(2, goals.Count);
+        var reloaded = await f.Context.Set<DayDash.Modules.StudyPlanner.Domain.Exam>().SingleAsync(e => e.Id == id);
+        Assert.Equal("Renamed", reloaded.Title);
+    }
+
+    [Fact]
     public async Task SaveLearningGoals_replaces_the_list_without_duplicating()
     {
         await using var f = new SqliteDbContextFixture();

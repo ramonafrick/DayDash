@@ -17,7 +17,7 @@ public class StudyPlannerService(
         => examRepository.ListAsync(ct);
 
     public Task<Exam?> GetExamAsync(Guid examId, CancellationToken ct = default)
-        => examRepository.GetWithGoalsAsync(examId, ct);
+        => examRepository.ReadOneAsync(examId, ct);
 
     public async Task<int> CalculateRecommendedMinutesAsync(int goalCount, string subject, CancellationToken ct = default)
     {
@@ -43,9 +43,56 @@ public class StudyPlannerService(
 
     public async Task UpdateExamAsync(Exam exam, CancellationToken ct = default)
     {
-        await ApplyComputedFieldsAsync(exam, ct);
-        await examRepository.UpdateAsync(exam, ct);
-        await notifier.NotifyAsync(new DataChange(DataChangeKind.ExamSaved, exam.Id), ct);
+        var ctx = examRepository.Context;
+        var tracked = await examRepository.GetWithGoalsAsync(exam.Id, ct);
+        if (tracked is null)
+        {
+            return;
+        }
+
+        tracked.Title = exam.Title;
+        tracked.Subject = exam.Subject;
+        tracked.ExamDate = exam.ExamDate;
+        tracked.TotalStudyMinutes = exam.TotalStudyMinutes;
+
+        // Reconcile the goal list against the DbSet directly: drop removed, update matching by id, add new.
+        var goalSet = ctx.Set<LearningGoal>();
+        var incoming = exam.LearningGoals.Where(g => !string.IsNullOrWhiteSpace(g.Text)).ToList();
+        var incomingIds = incoming.Where(g => g.Id != Guid.Empty).Select(g => g.Id).ToHashSet();
+        var current = tracked.LearningGoals.ToList();
+
+        foreach (var orphan in current.Where(g => !incomingIds.Contains(g.Id)))
+        {
+            goalSet.Remove(orphan);
+        }
+
+        var goalCount = 0;
+        for (var i = 0; i < incoming.Count; i++)
+        {
+            var src = incoming[i];
+            var existing = src.Id != Guid.Empty ? current.FirstOrDefault(g => g.Id == src.Id) : null;
+            if (existing is null)
+            {
+                goalSet.Add(new LearningGoal
+                {
+                    Id = Guid.NewGuid(), ExamId = tracked.Id, Text = src.Text.Trim(), IsChecked = src.IsChecked, SortOrder = i,
+                });
+            }
+            else
+            {
+                existing.Text = src.Text.Trim();
+                existing.IsChecked = src.IsChecked;
+                existing.SortOrder = i;
+            }
+
+            goalCount++;
+        }
+
+        tracked.RecommendedMinutes = await CalculateRecommendedMinutesAsync(goalCount, tracked.Subject, ct);
+        tracked.DailyMinutes = StudyMath.DailyMinutes(tracked.TotalStudyMinutes, tracked.ExamDate, Today);
+
+        await ctx.SaveChangesAsync(ct);
+        await notifier.NotifyAsync(new DataChange(DataChangeKind.ExamSaved, tracked.Id), ct);
     }
 
     public async Task DeleteExamAsync(Guid examId, CancellationToken ct = default)
@@ -88,7 +135,7 @@ public class StudyPlannerService(
             .Where(g => !string.IsNullOrWhiteSpace(g.Text))
             .Select((g, i) => new LearningGoal
             {
-                Id = g.Id == Guid.Empty ? Guid.NewGuid() : g.Id,
+                Id = Guid.NewGuid(), // full replacement - never reuse an incoming id (avoids a clash with the just-Deleted rows)
                 ExamId = examId,
                 Text = g.Text.Trim(),
                 IsChecked = g.IsChecked,

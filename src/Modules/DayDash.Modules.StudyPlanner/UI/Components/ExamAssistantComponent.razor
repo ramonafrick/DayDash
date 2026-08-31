@@ -47,6 +47,11 @@
         </div>
     }
 
+    @if (_error is not null)
+    {
+        <p class="assistant-error">@_error</p>
+    }
+
     <div class="actions">
         @if (_step > 1)
         {

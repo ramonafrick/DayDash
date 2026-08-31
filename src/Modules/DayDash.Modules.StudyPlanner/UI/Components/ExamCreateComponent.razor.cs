@@ -54,24 +54,32 @@ public partial class ExamCreateComponent
 
     private async Task SubmitAsync()
     {
-        var exam = Exam ?? new Exam { Id = Guid.NewGuid() };
-        exam.Title = _model.Title.Trim();
-        exam.Subject = _model.Subject;
-        exam.ExamDate = _model.ExamDate;
-        exam.TotalStudyMinutes = _model.TotalStudyMinutes;
-        exam.LearningGoals = _goals
-            .Where(g => !string.IsNullOrWhiteSpace(g.Text))
-            .Select((g, i) => new LearningGoal { Id = g.Id, ExamId = exam.Id, Text = g.Text.Trim(), IsChecked = g.IsChecked, SortOrder = i })
-            .ToList();
+        // A detached snapshot - the service loads/tracks its own copy for updates.
+        var snapshot = new Exam
+        {
+            Id = Exam?.Id ?? Guid.NewGuid(),
+            Title = _model.Title.Trim(),
+            Subject = _model.Subject,
+            ExamDate = _model.ExamDate,
+            TotalStudyMinutes = _model.TotalStudyMinutes,
+            LearningGoals = _goals
+                .Where(g => !string.IsNullOrWhiteSpace(g.Text))
+                .Select((g, i) => new LearningGoal { Id = g.Id, Text = g.Text.Trim(), IsChecked = g.IsChecked, SortOrder = i })
+                .ToList(),
+        };
 
-        var id = IsNew ? await StudyPlanner.CreateExamAsync(exam) : await Persist(exam);
+        Guid id;
+        if (IsNew)
+        {
+            id = await StudyPlanner.CreateExamAsync(snapshot);
+        }
+        else
+        {
+            await StudyPlanner.UpdateExamAsync(snapshot);
+            id = snapshot.Id;
+        }
+
         await OnSaved.InvokeAsync(id);
-    }
-
-    private async Task<Guid> Persist(Exam exam)
-    {
-        await StudyPlanner.UpdateExamAsync(exam);
-        return exam.Id;
     }
 
     private sealed class EditModel

@@ -21,6 +21,7 @@ public partial class ExamAssistantComponent
     [Parameter] public EventCallback OnCancel { get; set; }
 
     private int _step = 1;
+    private string? _error;
     private List<SubjectConfig> _subjects = [];
     private readonly List<LearningGoal> _goals = [];
 
@@ -70,19 +71,28 @@ public partial class ExamAssistantComponent
         }
 
         _busy = true;
-        var exam = new Exam
+        _error = null;
+        try
         {
-            Id = Guid.NewGuid(),
-            Title = _title.Trim(),
-            Subject = _subject,
-            ExamDate = _date,
-            TotalStudyMinutes = _totalMinutes,
-            LearningGoals = GoalTexts()
-                .Select((g, i) => new LearningGoal { Id = Guid.NewGuid(), Text = g.Text.Trim(), SortOrder = i })
-                .ToList(),
-        };
+            var exam = new Exam
+            {
+                Id = Guid.NewGuid(),
+                Title = _title.Trim(),
+                Subject = _subject,
+                ExamDate = _date,
+                TotalStudyMinutes = _totalMinutes,
+                LearningGoals = GoalTexts()
+                    .Select((g, i) => new LearningGoal { Id = Guid.NewGuid(), Text = g.Text.Trim(), SortOrder = i })
+                    .ToList(),
+            };
 
-        var id = await StudyPlanner.CreateExamAsync(exam);
-        await OnExamCreated.InvokeAsync(id);
+            var id = await StudyPlanner.CreateExamAsync(exam);
+            await OnExamCreated.InvokeAsync(id);
+        }
+        catch (Exception)
+        {
+            _error = Loc["SaveFailed"];
+            _busy = false;
+        }
     }
 }
