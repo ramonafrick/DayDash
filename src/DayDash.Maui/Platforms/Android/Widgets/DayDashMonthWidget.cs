@@ -2,6 +2,9 @@ using Android.App;
 using Android.Appwidget;
 using Android.Content;
 using Android.Widget;
+using DayDash.Maui.Platforms.Android;
+using DayDash.Modules.Widget.Application.Services;
+using DayDash.Modules.Widget.Resources;
 
 namespace DayDash.Maui;
 
@@ -12,19 +15,21 @@ public class DayDashMonthWidget : AppWidgetProvider
 {
     public override void OnUpdate(Context? context, AppWidgetManager? appWidgetManager, int[]? appWidgetIds)
     {
+        if (context is null || appWidgetManager is null)
+        {
+            return;
+        }
+
+        WidgetHost.ApplyCulture();
+        var snapshot = WidgetHost.Read(context, s => s.GetMonthAsync());
+
         foreach (var appWidgetId in appWidgetIds ?? [])
         {
-            UpdateAppWidget(context!, appWidgetManager!, appWidgetId);
+            var views = new RemoteViews(context.PackageName, Resource.Layout.widget_daydash_month);
+            views.SetOnClickPendingIntent(Resource.Id.widget_root, WidgetTapIntent.OpenApp(context));
+            views.SetTextViewText(Resource.Id.widget_month_title, WidgetResources.MonthWidgetTitle);
+            views.SetTextViewText(Resource.Id.widget_month_overview, WidgetTextFormatter.MonthGrid(snapshot));
+            appWidgetManager.UpdateAppWidget(appWidgetId, views);
         }
-    }
-
-    private static void UpdateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
-    {
-        var views = new RemoteViews(context.PackageName, Resource.Layout.widget_daydash_month);
-
-        // TODO: render a mini month calendar with markers for days that have events.
-        views.SetTextViewText(Resource.Id.widget_month_overview, "This month");
-
-        appWidgetManager.UpdateAppWidget(appWidgetId, views);
     }
 }

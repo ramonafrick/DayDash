@@ -39,6 +39,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IFileShareService, MauiFileShareService>();
 		builder.Services.AddScoped<ICameraService, MauiCameraService>();
 		builder.Services.AddSingleton<INotificationScheduler, MauiNotificationScheduler>();
+		builder.Services.AddScoped<IDataChangeHandler, AndroidWidgetRefreshHandler>();
 
 		// Feature modules - Settings and Storage first (both leaves).
 		builder.Services

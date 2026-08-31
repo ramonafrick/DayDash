@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="DayWidgetTitle" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="WeekWidgetTitle" xml:space="preserve">
+    <value>This week</value>
+  </data>
+  <data name="MonthWidgetTitle" xml:space="preserve">
+    <value>This month</value>
+  </data>
+  <data name="NextEvent" xml:space="preserve">
+    <value>Next event</value>
+  </data>
+  <data name="StudyPlan" xml:space="preserve">
+    <value>Study plan</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="NoEventsToday" xml:space="preserve">
+    <value>No events today</value>
+  </data>
+  <data name="NoEventsThisWeek" xml:space="preserve">
+    <value>No events this week</value>
+  </data>
+  <data name="NoStudyToday" xml:space="preserve">
+    <value>Nothing to study today</value>
+  </data>
+  <data name="AllDay" xml:space="preserve">
+    <value>All day</value>
+  </data>
+  <data name="DataUnavailable" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="Weekday_Mon" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="Weekday_Tue" xml:space="preserve">
+    <value>Tue</value>
+  </data>
+  <data name="Weekday_Wed" xml:space="preserve">
+    <value>Wed</value>
+  </data>
+  <data name="Weekday_Thu" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="Weekday_Fri" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="Weekday_Sat" xml:space="preserve">
+    <value>Sat</value>
+  </data>
+  <data name="Weekday_Sun" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+</root>
