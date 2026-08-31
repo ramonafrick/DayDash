@@ -13,7 +13,7 @@ public class NavMenuTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
 
-        var cut = ctx.RenderComponent<NavMenu>();
+        var cut = ctx.Render<NavMenu>();
 
         var hrefs = cut.FindAll("nav a.nav-link").Select(a => a.GetAttribute("href")).ToArray();
         Assert.Equal(new[] { "calendar", "study", "camera", "settings" }, hrefs);
@@ -25,7 +25,7 @@ public class NavMenuTests : CultureIsolatedTest
         using var ctx = new DayDashTestContext();
         ctx.CultureState.ChangeCulture(new CultureInfo("de-CH"));
 
-        var cut = ctx.RenderComponent<NavMenu>();
+        var cut = ctx.Render<NavMenu>();
         Assert.Contains("Kalender", cut.Markup);
         Assert.Contains("Einstellungen", cut.Markup);
 

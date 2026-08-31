@@ -12,7 +12,7 @@ namespace DayDash.Tests.Infrastructure;
 /// the singleton <see cref="CultureStateService"/>, a deterministic <see cref="TimeProvider"/>
 /// and an in-memory <see cref="IAppPreferences"/>.
 /// </summary>
-public class DayDashTestContext : TestContext
+public class DayDashTestContext : BunitContext
 {
     public FakeTimeProvider Time { get; } = new(new DateTimeOffset(2026, 3, 10, 8, 0, 0, TimeSpan.Zero));
 

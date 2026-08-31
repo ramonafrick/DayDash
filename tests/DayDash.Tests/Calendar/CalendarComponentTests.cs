@@ -24,7 +24,7 @@ public class CalendarComponentTests : CultureIsolatedTest
     public void Toggling_the_view_swaps_the_child_component()
     {
         using var ctx = NewContext(out _, out _);
-        var cut = ctx.RenderComponent<CalendarComponent>();
+        var cut = ctx.Render<CalendarComponent>();
 
         Assert.NotEmpty(cut.FindComponents<CalendarMonthView>());
         Assert.Empty(cut.FindComponents<CalendarWeekView>());
@@ -39,7 +39,7 @@ public class CalendarComponentTests : CultureIsolatedTest
     public void Export_button_calls_the_service_and_the_share_sheet()
     {
         using var ctx = NewContext(out var calendar, out var share);
-        var cut = ctx.RenderComponent<CalendarComponent>();
+        var cut = ctx.Render<CalendarComponent>();
 
         cut.FindAll(".calendar-actions button")[1].Click(); // Export
 
@@ -55,7 +55,7 @@ public class CalendarComponentTests : CultureIsolatedTest
     public void New_event_button_opens_the_edit_form()
     {
         using var ctx = NewContext(out _, out _);
-        var cut = ctx.RenderComponent<CalendarComponent>();
+        var cut = ctx.Render<CalendarComponent>();
 
         cut.FindAll(".calendar-actions button")[0].Click(); // New event
 

@@ -22,7 +22,7 @@ public class CalendarMonthViewTests : CultureIsolatedTest
         var calendar = new FakeCalendarService();
         using var ctx = NewContext(calendar);
 
-        var cut = ctx.RenderComponent<CalendarMonthView>();
+        var cut = ctx.Render<CalendarMonthView>();
 
         Assert.Equal(42, cut.FindAll(".day-cell").Count);
     }
@@ -34,7 +34,7 @@ public class CalendarMonthViewTests : CultureIsolatedTest
         using var ctx = NewContext(calendar);
         DateOnly? selected = null;
 
-        var cut = ctx.RenderComponent<CalendarMonthView>(p => p
+        var cut = ctx.Render<CalendarMonthView>(p => p
             .Add(c => c.OnDaySelected, d => selected = d));
 
         cut.FindAll(".day-cell")[10].Click();
@@ -48,7 +48,7 @@ public class CalendarMonthViewTests : CultureIsolatedTest
         var calendar = new FakeCalendarService();
         using var ctx = NewContext(calendar);
 
-        var cut = ctx.RenderComponent<CalendarMonthView>(); // fixture "today" = 2026-03-10
+        var cut = ctx.Render<CalendarMonthView>(); // fixture "today" = 2026-03-10
         Assert.Equal(1, calendar.RangeQueries);
         Assert.True(calendar.LastRangeQuery.From <= new DateOnly(2026, 3, 1));
         Assert.True(calendar.LastRangeQuery.To >= new DateOnly(2026, 3, 31));

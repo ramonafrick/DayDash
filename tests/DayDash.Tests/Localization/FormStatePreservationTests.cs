@@ -12,7 +12,7 @@ public class FormStatePreservationTests : CultureIsolatedTest
     public void Switching_the_language_keeps_a_half_filled_form_and_only_swaps_labels()
     {
         using var ctx = new DayDashTestContext();
-        var cut = ctx.RenderComponent<EventEditComponent>(p => p
+        var cut = ctx.Render<EventEditComponent>(p => p
             .Add(c => c.Event, (CalendarEvent?)null)
             .Add(c => c.EventTypes, []));
 

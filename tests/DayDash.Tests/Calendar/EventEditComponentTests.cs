@@ -13,7 +13,7 @@ public class EventEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         CalendarEvent? saved = null;
-        var cut = ctx.RenderComponent<EventEditComponent>(p => p
+        var cut = ctx.Render<EventEditComponent>(p => p
             .Add(c => c.OnSave, e => saved = e));
 
         cut.Find("form").Submit();
@@ -27,7 +27,7 @@ public class EventEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         CalendarEvent? saved = null;
-        var cut = ctx.RenderComponent<EventEditComponent>(p => p
+        var cut = ctx.Render<EventEditComponent>(p => p
             .Add(c => c.OnSave, e => saved = e));
 
         cut.Find("#ev-title").Change("Test");
@@ -43,7 +43,7 @@ public class EventEditComponentTests : CultureIsolatedTest
     public void Ticking_all_day_hides_the_time_inputs()
     {
         using var ctx = new DayDashTestContext();
-        var cut = ctx.RenderComponent<EventEditComponent>();
+        var cut = ctx.Render<EventEditComponent>();
 
         Assert.NotEmpty(cut.FindAll("#ev-from"));
 
@@ -57,7 +57,7 @@ public class EventEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         CalendarEvent? saved = null;
-        var cut = ctx.RenderComponent<EventEditComponent>(p => p
+        var cut = ctx.Render<EventEditComponent>(p => p
             .Add(c => c.OnSave, e => saved = e));
 
         cut.Find("#ev-title").Change("Ferien");

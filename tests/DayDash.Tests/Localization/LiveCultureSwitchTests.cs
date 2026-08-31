@@ -14,7 +14,7 @@ public class LiveCultureSwitchTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
 
-        var cut = ctx.RenderComponent<NavMenu>();
+        var cut = ctx.Render<NavMenu>();
         Assert.Contains("Kalender", cut.Markup);
         Assert.DoesNotContain("Calendar", cut.Markup);
 
@@ -32,7 +32,7 @@ public class LiveCultureSwitchTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
 
-        var cut = ctx.RenderComponent<EventEditComponent>(p => p
+        var cut = ctx.Render<EventEditComponent>(p => p
             .Add(c => c.Event, (CalendarEvent?)null)
             .Add(c => c.EventTypes, []));
         Assert.Contains("Speichern", cut.Markup);

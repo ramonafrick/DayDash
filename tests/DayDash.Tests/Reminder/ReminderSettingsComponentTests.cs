@@ -29,7 +29,7 @@ public class ReminderSettingsComponentTests : CultureIsolatedTest
             IsEnabled = false,
         };
 
-        var cut = ctx.RenderComponent<ReminderSettingsComponent>();
+        var cut = ctx.Render<ReminderSettingsComponent>();
 
         Assert.Equal("07:45", cut.Find("#rm-time").GetAttribute("value"));
         Assert.Equal("4", cut.Find("#rm-days").GetAttribute("value"));
@@ -41,7 +41,7 @@ public class ReminderSettingsComponentTests : CultureIsolatedTest
         using var ctx = NewContext(out var reminders);
         reminders.NotificationsSupported = false;
 
-        var cut = ctx.RenderComponent<ReminderSettingsComponent>();
+        var cut = ctx.Render<ReminderSettingsComponent>();
 
         Assert.Contains("Browser-Vorschau", cut.Markup);
     }
@@ -51,7 +51,7 @@ public class ReminderSettingsComponentTests : CultureIsolatedTest
     {
         using var ctx = NewContext(out var reminders);
 
-        var cut = ctx.RenderComponent<ReminderSettingsComponent>();
+        var cut = ctx.Render<ReminderSettingsComponent>();
         cut.Find("#rm-days").Change("5");
         cut.Find("button.btn-primary").Click();
 

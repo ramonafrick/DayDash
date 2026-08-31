@@ -26,7 +26,7 @@ public class CultureAwareComponentBaseTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         ctx.CultureState.ChangeCulture(new CultureInfo("de-CH"));
-        var cut = ctx.RenderComponent<Probe>();
+        var cut = ctx.Render<Probe>();
         var before = cut.Instance.RenderCount;
 
         ctx.CultureState.ChangeCulture(new CultureInfo("en"));
@@ -39,7 +39,7 @@ public class CultureAwareComponentBaseTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         ctx.CultureState.ChangeCulture(new CultureInfo("de-CH"));
-        var cut = ctx.RenderComponent<Probe>();
+        var cut = ctx.Render<Probe>();
         var probe = cut.Instance;
 
         cut.Instance.Dispose();

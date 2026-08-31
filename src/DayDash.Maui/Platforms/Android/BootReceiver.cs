@@ -38,7 +38,7 @@ public sealed class BootReceiver : BroadcastReceiver
         }
         finally
         {
-            pending.Finish();
+            pending?.Finish();
         }
     }
 }

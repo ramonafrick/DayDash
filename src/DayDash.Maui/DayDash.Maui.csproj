@@ -45,6 +45,10 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+
+        <!-- XA4301: the ML Kit binding AARs ship the same native OCR lib twice; the build
+             correctly keeps one copy, so the duplicate-item notice is just noise. -->
+        <NoWarn>$(NoWarn);XA4301</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -72,6 +76,20 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
         <PackageReference Include="Xamarin.Google.MLKit.TextRecognition" />
         <PackageReference Include="Plugin.LocalNotification" />
+
+        <!-- Security bump: EF Core Sqlite would otherwise pull the vulnerable 2.1.11 native libs. -->
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+
+        <!-- AndroidX alignment, see Directory.Packages.props (NU1608). -->
+        <PackageReference Include="Xamarin.AndroidX.Activity.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx.Android" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" />
     </ItemGroup>
 
     <ItemGroup>

@@ -23,7 +23,7 @@ public class ExamComponentTests : CultureIsolatedTest
     public void ExamCreate_updates_the_recommendation_when_a_goal_is_added_and_when_the_subject_changes()
     {
         using var ctx = NewContext(out _, out _);
-        var cut = ctx.RenderComponent<ExamCreateComponent>();
+        var cut = ctx.Render<ExamCreateComponent>();
 
         cut.Find("#ex-subject").Change("Deutsch"); // 20 min/goal
         cut.FindAll("button").First(b => b.TextContent.Contains("Ziel")).Click(); // Add goal
@@ -35,7 +35,7 @@ public class ExamComponentTests : CultureIsolatedTest
     public void ExamCreate_empty_title_blocks_submit()
     {
         using var ctx = NewContext(out var planner, out _);
-        var cut = ctx.RenderComponent<ExamCreateComponent>();
+        var cut = ctx.Render<ExamCreateComponent>();
 
         cut.Find("#ex-subject").Change("Deutsch");
         cut.Find("form").Submit();
@@ -49,7 +49,7 @@ public class ExamComponentTests : CultureIsolatedTest
     {
         using var ctx = NewContext(out var planner, out _);
         Guid? created = null;
-        var cut = ctx.RenderComponent<ExamAssistantComponent>(p => p
+        var cut = ctx.Render<ExamAssistantComponent>(p => p
             .Add(c => c.InitialTitle, "Mathe-Prüfung")
             .Add(c => c.InitialDate, new DateOnly(2026, 4, 1))
             .Add(c => c.OnExamCreated, id => created = id));
@@ -74,7 +74,7 @@ public class ExamComponentTests : CultureIsolatedTest
     {
         using var ctx = NewContext(out var planner, out _);
         var cancelled = false;
-        var cut = ctx.RenderComponent<ExamAssistantComponent>(p => p
+        var cut = ctx.Render<ExamAssistantComponent>(p => p
             .Add(c => c.OnCancel, () => cancelled = true));
 
         cut.FindAll("button").First(b => b.TextContent.Contains("Abbrechen")).Click();
@@ -88,7 +88,7 @@ public class ExamComponentTests : CultureIsolatedTest
     {
         using var ctx = NewContext(out _, out _);
 
-        var cut = ctx.RenderComponent<TodayStudyPlanComponent>();
+        var cut = ctx.Render<TodayStudyPlanComponent>();
 
         Assert.Contains("Heute nichts zu lernen", cut.Markup);
         Assert.Empty(cut.FindAll("li"));

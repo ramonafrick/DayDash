@@ -31,7 +31,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
     {
         using var ctx = NewContext(out _, out _);
 
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
 
         Assert.Contains("Lege zuerst eine Prüfung an", cut.Markup);
         Assert.DoesNotContain("Foto aufnehmen", cut.Markup);
@@ -43,7 +43,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         using var ctx = NewContext(out var camera, out var planner);
         planner.Exams.Add(TestData.AnExam());
         camera.Next = OcrResult.Failure(OcrCaptureStatus.NoTextFound);
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
 
         cut.Find("button.btn-primary").Click();
 
@@ -57,7 +57,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         using var ctx = NewContext(out var camera, out var planner);
         planner.Exams.Add(TestData.AnExam());
         camera.Next = OcrResult.Failure(OcrCaptureStatus.Cancelled);
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
 
         cut.Find("button.btn-primary").Click();
 
@@ -70,7 +70,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         using var ctx = NewContext(out var camera, out var planner);
         planner.Exams.Add(TestData.AnExam());
         camera.Next = OcrResult.Failure(OcrCaptureStatus.PermissionDenied);
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
 
         cut.Find("button.btn-primary").Click();
 
@@ -83,7 +83,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         using var ctx = NewContext(out var camera, out var planner);
         planner.Exams.Add(TestData.AnExam());
         camera.Next = OcrResult.Success("Kapitel 1\nKapitel 2\nKapitel 3");
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
 
         cut.Find("button.btn-primary").Click();
 
@@ -99,7 +99,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         planner.Exams.Add(examA);
         planner.Exams.Add(examB);
         camera.Next = OcrResult.Success("Kapitel 1\nKapitel 2");
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
         cut.Find("button.btn-primary").Click();
         cut.WaitForAssertion(() => Assert.NotEmpty(cut.FindAll("input[type=text]")));
 
@@ -116,7 +116,7 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
         var exam = TestData.AnExam();
         planner.Exams.Add(exam);
         camera.Next = OcrResult.Success("Kapitel 1\nKapitel 2");
-        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        var cut = ctx.Render<CameraCaptureComponent>();
         cut.Find("button.btn-primary").Click();
 
         cut.WaitForAssertion(() => Assert.NotEmpty(cut.FindAll("input[type=text]")));

@@ -115,8 +115,8 @@ public class WidgetDataServiceTests
 
         Assert.Equal(42, snapshot.Days.Count);
         Assert.Equal([3, 12, 19], snapshot.DaysWithEvents);
-        Assert.Single(snapshot.Days.Where(d => d.IsToday));
-        Assert.True(snapshot.Days.Single(d => d.IsToday).IsCurrentMonth);
+        var today = Assert.Single(snapshot.Days, d => d.IsToday);
+        Assert.True(today.IsCurrentMonth);
     }
 
     [Fact]

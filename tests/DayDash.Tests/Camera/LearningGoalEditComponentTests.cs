@@ -20,7 +20,7 @@ public class LearningGoalEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         var goals = ThreeGoals();
-        var cut = ctx.RenderComponent<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
+        var cut = ctx.Render<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
 
         cut.FindAll("button").Where(b => b.TextContent.Contains("Zeile löschen")).ElementAt(1).Click();
 
@@ -33,7 +33,7 @@ public class LearningGoalEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         var goals = ThreeGoals();
-        var cut = ctx.RenderComponent<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
+        var cut = ctx.Render<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
 
         cut.FindAll("button").First(b => b.TextContent.Contains("Nach oben")).Click();
 
@@ -45,7 +45,7 @@ public class LearningGoalEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         var goals = ThreeGoals();
-        var cut = ctx.RenderComponent<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
+        var cut = ctx.Render<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
 
         cut.FindAll("button").Where(b => b.TextContent.Contains("Nach unten")).Last().Click();
 
@@ -57,7 +57,7 @@ public class LearningGoalEditComponentTests : CultureIsolatedTest
     {
         using var ctx = new DayDashTestContext();
         var goals = ThreeGoals();
-        var cut = ctx.RenderComponent<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
+        var cut = ctx.Render<LearningGoalEditComponent>(p => p.Add(c => c.Goals, goals));
 
         cut.FindAll("button").Where(b => b.TextContent.Contains("Nach oben")).ElementAt(2).Click();
 
