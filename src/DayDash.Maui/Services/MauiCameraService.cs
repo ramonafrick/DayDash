@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Graphics;
 using DayDash.Maui.Platforms.Android;
 using DayDash.Modules.Camera.Application.Contracts;
 using DayDash.Modules.Camera.Application.Models;
@@ -22,6 +21,8 @@ public sealed class MauiCameraService : ICameraService
     {
         try
         {
+            ct.ThrowIfCancellationRequested();
+
             if (!MediaPicker.Default.IsCaptureSupported)
             {
                 return OcrResult.Failure(OcrCaptureStatus.NotSupported);
@@ -46,21 +47,20 @@ public sealed class MauiCameraService : ICameraService
                 return OcrResult.Failure(OcrCaptureStatus.Cancelled);
             }
 
-            await using var stream = await photo.OpenReadAsync();
-            using var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
-            if (bitmap is null)
-            {
-                return OcrResult.Failure(OcrCaptureStatus.Failed);
-            }
+            // InputImage.FromFilePath reads the JPEG's EXIF orientation, so a portrait
+            // photo of a worksheet is handed to ML Kit upright rather than sideways.
+            var uri = global::Android.Net.Uri.FromFile(new Java.IO.File(photo.FullPath))
+                      ?? throw new InvalidOperationException("Captured photo has no file path.");
+            var image = InputImage.FromFilePath(global::Android.App.Application.Context, uri);
 
-            var image = InputImage.FromBitmap(bitmap, 0);
             using var recognizer = TextRecognition.GetClient(TextRecognizerOptions.DefaultOptions);
-
             var listener = new MlKitTaskCompletionListener();
             using var task = recognizer.Process(image);
             task.AddOnCompleteListener(listener);
 
-            var result = await listener.Task.WaitAsync(ct);
+            // Let recognition run to completion - abandoning it mid-flight would dispose
+            // the recognizer while ML Kit is still using it natively.
+            var result = await listener.Task;
             var text = (result as Text)?.GetText() ?? string.Empty;
 
             return string.IsNullOrWhiteSpace(text)

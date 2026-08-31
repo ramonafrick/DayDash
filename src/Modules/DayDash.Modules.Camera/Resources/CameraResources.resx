@@ -39,6 +39,9 @@
   <data name="NoExamSelected" xml:space="preserve">
     <value>Lege zuerst eine Prüfung an, um Lernziele hinzuzufügen.</value>
   </data>
+  <data name="LoadFailed" xml:space="preserve">
+    <value>Die Prüfungen konnten nicht geladen werden.</value>
+  </data>
   <data name="AttachToExam" xml:space="preserve">
     <value>Zu Prüfung hinzufügen</value>
   </data>

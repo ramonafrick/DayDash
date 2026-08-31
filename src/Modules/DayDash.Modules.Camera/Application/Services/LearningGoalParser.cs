@@ -32,11 +32,23 @@ public partial class LearningGoalParser : ILearningGoalParser
             {
                 Id = Guid.NewGuid(),
                 ExamId = examId,
-                Text = line.Length > MaxLength ? line[..MaxLength] : line,
+                Text = Truncate(line),
                 SortOrder = index,
                 IsChecked = false,
             })
             .ToList();
+    }
+
+    private static string Truncate(string line)
+    {
+        if (line.Length <= MaxLength)
+        {
+            return line;
+        }
+
+        // Never cut through a surrogate pair - back off one char if the boundary lands mid-rune.
+        var end = char.IsHighSurrogate(line[MaxLength - 1]) ? MaxLength - 1 : MaxLength;
+        return line[..end];
     }
 
     [GeneratedRegex(@"\s+")]

@@ -39,6 +39,9 @@
   <data name="NoExamSelected" xml:space="preserve">
     <value>Create an exam first to add learning goals.</value>
   </data>
+  <data name="LoadFailed" xml:space="preserve">
+    <value>The exams could not be loaded.</value>
+  </data>
   <data name="AttachToExam" xml:space="preserve">
     <value>Add to exam</value>
   </data>

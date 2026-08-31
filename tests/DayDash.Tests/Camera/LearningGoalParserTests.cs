@@ -62,6 +62,17 @@ public class LearningGoalParserTests
     }
 
     [Fact]
+    public void Truncation_never_splits_a_surrogate_pair()
+    {
+        var line = new string('x', LearningGoalParser.MaxLength - 1) + "\U0001F600"; // 199 x + emoji (2 code units)
+
+        var text = Assert.Single(_parser.ParseToLearningGoals(line, Guid.NewGuid())).Text;
+
+        Assert.Equal(LearningGoalParser.MaxLength - 1, text.Length);
+        Assert.False(char.IsHighSurrogate(text[^1]));
+    }
+
+    [Fact]
     public void Leading_trailing_whitespace_is_trimmed_and_internal_runs_collapsed()
     {
         var goals = _parser.ParseToLearningGoals("   spaced    out   words   ", Guid.NewGuid());

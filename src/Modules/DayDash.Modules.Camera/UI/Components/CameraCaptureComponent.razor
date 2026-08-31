@@ -7,7 +7,11 @@
 <div class="camera-page">
     <h1>@Loc["CameraTitle"]</h1>
 
-    @if (_exams.Count == 0)
+    @if (_loadFailed)
+    {
+        <p class="error">@Loc["LoadFailed"]</p>
+    }
+    else if (_exams.Count == 0)
     {
         <p class="hint">@Loc["NoExamSelected"]</p>
     }
@@ -15,8 +19,8 @@
     {
         <div class="form-field">
             <label for="camera-exam-select">@Loc["SelectExam"]</label>
-            <select id="camera-exam-select" class="form-input" value="@_selectedExamId"
-                    @onchange="OnExamChanged" disabled="@_busy">
+            <select id="camera-exam-select" class="form-input" @bind="_selectedExamId"
+                    @bind:after="ResetScan" disabled="@_busy">
                 @foreach (var exam in _exams)
                 {
                     <option value="@exam.Id">@exam.Title (@exam.Subject)</option>

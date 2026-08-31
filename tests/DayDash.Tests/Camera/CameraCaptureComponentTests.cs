@@ -91,6 +91,25 @@ public class CameraCaptureComponentTests : CultureIsolatedTest
     }
 
     [Fact]
+    public void Switching_the_exam_after_a_scan_discards_the_pending_goals()
+    {
+        using var ctx = NewContext(out var camera, out var planner);
+        var examA = TestData.AnExam("Mathe");
+        var examB = TestData.AnExam("Deutsch");
+        planner.Exams.Add(examA);
+        planner.Exams.Add(examB);
+        camera.Next = OcrResult.Success("Kapitel 1\nKapitel 2");
+        var cut = ctx.RenderComponent<CameraCaptureComponent>();
+        cut.Find("button.btn-primary").Click();
+        cut.WaitForAssertion(() => Assert.NotEmpty(cut.FindAll("input[type=text]")));
+
+        cut.Find("#camera-exam-select").Change(examB.Id.ToString());
+
+        Assert.Empty(cut.FindAll("input[type=text]"));
+        Assert.DoesNotContain("Erkannte Lernziele", cut.Markup);
+    }
+
+    [Fact]
     public void Saving_recognised_goals_calls_the_planner_and_confirms()
     {
         using var ctx = NewContext(out var camera, out var planner);

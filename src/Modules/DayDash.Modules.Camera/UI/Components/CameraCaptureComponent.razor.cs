@@ -16,6 +16,8 @@ public partial class CameraCaptureComponent
     private readonly List<Exam> _exams = [];
     private Guid _selectedExamId;
     private bool _busy;
+    private bool _saving;
+    private bool _loadFailed;
     private OcrCaptureStatus? _status;
     private List<LearningGoal> _goals = [];
     private SaveResult _saveState;
@@ -29,21 +31,28 @@ public partial class CameraCaptureComponent
 
     protected override async Task OnInitializedAsync()
     {
-        var exams = await StudyPlanner.GetExamsAsync();
-        _exams.Clear();
-        _exams.AddRange(exams);
+        try
+        {
+            var exams = await StudyPlanner.GetExamsAsync();
+            _exams.Clear();
+            _exams.AddRange(exams);
 
-        _selectedExamId = ExamId is { } id && _exams.Any(e => e.Id == id)
-            ? id
-            : _exams.FirstOrDefault()?.Id ?? Guid.Empty;
+            _selectedExamId = ExamId is { } id && _exams.Any(e => e.Id == id)
+                ? id
+                : _exams.FirstOrDefault()?.Id ?? Guid.Empty;
+        }
+        catch
+        {
+            _loadFailed = true;
+        }
     }
 
-    private void OnExamChanged(ChangeEventArgs e)
+    /// <summary>Selecting a different exam discards a scan that belonged to the previous one.</summary>
+    private void ResetScan()
     {
-        if (Guid.TryParse(e.Value?.ToString(), out var id))
-        {
-            _selectedExamId = id;
-        }
+        _status = null;
+        _goals = [];
+        _saveState = SaveResult.None;
     }
 
     private async Task CaptureAsync()
@@ -84,6 +93,12 @@ public partial class CameraCaptureComponent
 
     private async Task SaveGoalsAsync(List<LearningGoal> goals)
     {
+        if (_saving)
+        {
+            return;
+        }
+
+        _saving = true;
         try
         {
             await StudyPlanner.SaveLearningGoalsAsync(_selectedExamId, goals);
@@ -92,6 +107,10 @@ public partial class CameraCaptureComponent
         catch
         {
             _saveState = SaveResult.Failed;
+        }
+        finally
+        {
+            _saving = false;
         }
     }
 }

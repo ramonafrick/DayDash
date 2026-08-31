@@ -10,7 +10,7 @@ namespace DayDash.Maui.Platforms.Android;
 /// </summary>
 internal sealed class MlKitTaskCompletionListener : Java.Lang.Object, IOnCompleteListener
 {
-    private readonly TaskCompletionSource<Java.Lang.Object?> _tcs = new();
+    private readonly TaskCompletionSource<Java.Lang.Object?> _tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public System.Threading.Tasks.Task<Java.Lang.Object?> Task => _tcs.Task;
 
