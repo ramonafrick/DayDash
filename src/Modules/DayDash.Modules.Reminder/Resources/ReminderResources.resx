@@ -45,16 +45,4 @@
   <data name="EventReminderBody" xml:space="preserve">
     <value>{0} am {1}</value>
   </data>
-  <data name="PerEventDaysBefore" xml:space="preserve">
-    <value>Erinnerung (Tage vorher)</value>
-  </data>
-  <data name="UseDefaultLeadTime" xml:space="preserve">
-    <value>Standard verwenden</value>
-  </data>
-  <data name="PermissionRequired" xml:space="preserve">
-    <value>DayDash braucht die Erlaubnis, Benachrichtigungen zu senden.</value>
-  </data>
-  <data name="PermissionDeniedHint" xml:space="preserve">
-    <value>Benachrichtigungen sind blockiert. Aktiviere sie in den Android-Einstellungen.</value>
-  </data>
 </root>

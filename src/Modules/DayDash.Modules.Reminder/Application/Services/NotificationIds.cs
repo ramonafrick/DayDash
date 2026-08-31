@@ -1,5 +1,3 @@
-using System.Buffers.Binary;
-
 namespace DayDash.Modules.Reminder.Application.Services;
 
 /// <summary>
@@ -23,8 +21,15 @@ public static class NotificationIds
     {
         Span<byte> bytes = stackalloc byte[16];
         id.TryWriteBytes(bytes);
-        var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes) ^ salt;
-        var result = (int)(raw & 0x7FFF_FFFF);
+
+        // FNV-1a over all 16 bytes, seeded with the namespace salt.
+        var hash = 2166136261u ^ salt;
+        foreach (var b in bytes)
+        {
+            hash = (hash ^ b) * 16777619u;
+        }
+
+        var result = (int)(hash & 0x7FFF_FFFF);
         return result < 100 ? result + 100 : result; // stay clear of the fixed low ids
     }
 }

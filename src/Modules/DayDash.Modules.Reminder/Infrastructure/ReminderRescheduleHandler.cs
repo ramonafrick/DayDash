@@ -10,5 +10,10 @@ namespace DayDash.Modules.Reminder.Infrastructure;
 public sealed class ReminderRescheduleHandler(IReminderService reminders) : IDataChangeHandler
 {
     public Task HandleAsync(DataChange change, CancellationToken ct = default)
-        => reminders.RescheduleAllAsync(ct);
+        => change.Kind switch
+        {
+            // Only changes that can move the study load or an event date matter here.
+            DataChangeKind.EventTypeChanged => Task.CompletedTask,
+            _ => reminders.RescheduleAllAsync(ct),
+        };
 }

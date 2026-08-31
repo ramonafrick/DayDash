@@ -27,7 +27,7 @@ public class ReminderServiceTests : CultureIsolatedTest
     }
 
     [Fact]
-    public async Task A_study_load_schedules_exactly_one_repeating_daily_reminder_at_the_configured_time()
+    public async Task A_study_load_schedules_exactly_one_daily_reminder_at_the_configured_time()
     {
         var host = new ReminderHost();
         host.StudyPlanner.Exams.Add(StudyExam(30));
@@ -36,9 +36,7 @@ public class ReminderServiceTests : CultureIsolatedTest
 
         var daily = Assert.Single(host.Scheduler.Scheduled);
         Assert.Equal(NotificationIds.DailyStudyReminder, daily.Id);
-        Assert.True(daily.RepeatDaily);
-        Assert.Equal(new TimeSpan(15, 30, 0), daily.DeliverAt.TimeOfDay);
-        Assert.Equal(new DateOnly(2026, 3, 10), DateOnly.FromDateTime(daily.DeliverAt.Date));
+        Assert.Equal(new DateTime(2026, 3, 10, 15, 30, 0), daily.DeliverAt);
     }
 
     [Fact]
@@ -49,7 +47,7 @@ public class ReminderServiceTests : CultureIsolatedTest
 
         await host.Service.RescheduleAllAsync();
 
-        Assert.Equal(new DateOnly(2026, 3, 11), DateOnly.FromDateTime(host.Scheduler.Daily!.DeliverAt.Date));
+        Assert.Equal(new DateTime(2026, 3, 11, 15, 30, 0), host.Scheduler.Daily!.DeliverAt);
     }
 
     [Fact]

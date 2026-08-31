@@ -46,11 +46,15 @@ public sealed class ReminderService(
             return;
         }
 
-        await ScheduleDailyStudyReminderAsync(config, ct);
-        await ScheduleEventRemindersAsync(config, ct);
+        // Manifest permission is not enough on Android 13+; ask once (no-op elsewhere).
+        await scheduler.RequestPermissionAsync(ct);
+
+        var now = timeProvider.GetLocalNow().DateTime;
+        await ScheduleDailyStudyReminderAsync(config, now, ct);
+        await ScheduleEventRemindersAsync(config, now, ct);
     }
 
-    private async Task ScheduleDailyStudyReminderAsync(ReminderConfig config, CancellationToken ct)
+    private async Task ScheduleDailyStudyReminderAsync(ReminderConfig config, DateTime now, CancellationToken ct)
     {
         var todaysExams = await studyPlanner.GetTodayStudyPlanAsync(ct);
         var totalMinutes = todaysExams.Sum(e => e.DailyMinutes);
@@ -61,23 +65,22 @@ public sealed class ReminderService(
             return; // FR-R2: only fire when there is something to study today
         }
 
-        var now = timeProvider.GetLocalNow();
-        var deliverAt = new DateTimeOffset(
-            DateOnly.FromDateTime(now.Date).ToDateTime(config.DailyStudyReminderTime), now.Offset);
+        // One-off for the next occurrence; re-armed on every app start / reboot / data change,
+        // so it never keeps firing with stale text after the exams are done.
+        var deliverAt = DateOnly.FromDateTime(now).ToDateTime(config.DailyStudyReminderTime);
         if (deliverAt <= now)
         {
             deliverAt = deliverAt.AddDays(1);
         }
 
         await scheduler.ScheduleAsync(
-            new NotificationRequest(NotificationIds.DailyStudyReminder, textBuilder.DailyStudyTitle, body, deliverAt, RepeatDaily: true),
+            new NotificationRequest(NotificationIds.DailyStudyReminder, textBuilder.DailyStudyTitle, body, deliverAt),
             ct);
     }
 
-    private async Task ScheduleEventRemindersAsync(ReminderConfig config, CancellationToken ct)
+    private async Task ScheduleEventRemindersAsync(ReminderConfig config, DateTime now, CancellationToken ct)
     {
-        var now = timeProvider.GetLocalNow();
-        var today = DateOnly.FromDateTime(now.Date);
+        var today = DateOnly.FromDateTime(now);
         var events = await calendar.GetEventsInRangeAsync(today, today.AddDays(EventWindowDays), ct);
 
         foreach (var e in events)
@@ -89,7 +92,7 @@ public sealed class ReminderService(
             }
 
             var fireTime = e.IsAllDay ? DefaultEventTime : e.TimeFrom ?? DefaultEventTime;
-            var deliverAt = new DateTimeOffset(e.Date.AddDays(-lead).ToDateTime(fireTime), now.Offset);
+            var deliverAt = e.Date.AddDays(-lead).ToDateTime(fireTime);
             if (deliverAt <= now)
             {
                 continue; // never schedule in the past

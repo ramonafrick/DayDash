@@ -7,6 +7,9 @@ namespace DayDash.Modules.Reminder.Application.Models;
 /// <param name="Id">Stable id from <see cref="Services.NotificationIds"/>.</param>
 /// <param name="Title">Notification title.</param>
 /// <param name="Body">Notification body.</param>
-/// <param name="DeliverAt">Local time to fire (never in the past by the time it reaches the scheduler).</param>
-/// <param name="RepeatDaily">When true, repeats every day at the same wall-clock time.</param>
-public sealed record NotificationRequest(int Id, string Title, string Body, DateTimeOffset DeliverAt, bool RepeatDaily = false);
+/// <param name="DeliverAt">
+/// Local wall-clock time to fire (never in the past by the time it reaches the scheduler).
+/// One-off - the schedule is re-derived on every app start, reboot and data change, so the
+/// text is always current (FR-R2).
+/// </param>
+public sealed record NotificationRequest(int Id, string Title, string Body, DateTime DeliverAt);

@@ -70,19 +70,9 @@ public static class MauiProgram
 				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
 					.LogError(ex, "Database initialization failed");
 			}
-
-			try
-			{
-				scope.ServiceProvider.GetRequiredService<IReminderService>()
-					.RescheduleAllAsync().GetAwaiter().GetResult();
-			}
-			catch (Exception ex)
-			{
-				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
-					.LogError(ex, "Reminder rescheduling failed");
-			}
 		}
 
+		// Reminders are (re)armed from App.OnStart, once the UI culture is applied.
 		return app;
 	}
 }

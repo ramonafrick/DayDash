@@ -24,8 +24,7 @@ public class EventReminderScheduleTests : CultureIsolatedTest
 
         var reminder = EventReminder(host, e);
         Assert.NotNull(reminder);
-        Assert.Equal(new DateTime(2026, 3, 19, 9, 0, 0), reminder!.DeliverAt.DateTime);
-        Assert.False(reminder.RepeatDaily);
+        Assert.Equal(new DateTime(2026, 3, 19, 9, 0, 0), reminder!.DeliverAt);
     }
 
     [Fact]
@@ -63,7 +62,7 @@ public class EventReminderScheduleTests : CultureIsolatedTest
 
         await host.Service.RescheduleAllAsync();
 
-        Assert.Equal(new DateTime(2026, 3, 15, 10, 0, 0), EventReminder(host, e)!.DeliverAt.DateTime);
+        Assert.Equal(new DateTime(2026, 3, 15, 10, 0, 0), EventReminder(host, e)!.DeliverAt);
     }
 
     [Fact]
@@ -75,7 +74,7 @@ public class EventReminderScheduleTests : CultureIsolatedTest
 
         await host.Service.RescheduleAllAsync();
 
-        Assert.Equal(new DateTime(2026, 3, 19, 8, 0, 0), EventReminder(host, e)!.DeliverAt.DateTime);
+        Assert.Equal(new DateTime(2026, 3, 19, 8, 0, 0), EventReminder(host, e)!.DeliverAt);
     }
 
     [Fact]
