@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Erinnerungen</value>
+  </data>
   <data name="ReminderSettings" xml:space="preserve">
     <value>Erinnerungen</value>
   </data>
@@ -12,7 +15,46 @@
   <data name="IsEnabled" xml:space="preserve">
     <value>Aktiviert</value>
   </data>
+  <data name="EnableNotifications" xml:space="preserve">
+    <value>Benachrichtigungen aktivieren</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Gespeichert.</value>
+  </data>
+  <data name="NotificationChannelName" xml:space="preserve">
+    <value>DayDash-Erinnerungen</value>
+  </data>
+  <data name="NotificationChannelDescription" xml:space="preserve">
+    <value>Lern- und Termin-Erinnerungen</value>
+  </data>
+  <data name="DailyStudyReminderTitle" xml:space="preserve">
+    <value>Zeit zum Lernen</value>
+  </data>
+  <data name="DailyStudyReminderBody" xml:space="preserve">
+    <value>Lernen für {0} – {1} Min heute</value>
+  </data>
+  <data name="DailyStudyReminderBodyMultiple" xml:space="preserve">
+    <value>{0} und {2} weitere – {1} Min heute</value>
+  </data>
+  <data name="EventReminderTitle" xml:space="preserve">
+    <value>Bald fällig</value>
+  </data>
+  <data name="EventReminderBody" xml:space="preserve">
+    <value>{0} am {1}</value>
+  </data>
+  <data name="PerEventDaysBefore" xml:space="preserve">
+    <value>Erinnerung (Tage vorher)</value>
+  </data>
+  <data name="UseDefaultLeadTime" xml:space="preserve">
+    <value>Standard verwenden</value>
+  </data>
+  <data name="PermissionRequired" xml:space="preserve">
+    <value>DayDash braucht die Erlaubnis, Benachrichtigungen zu senden.</value>
+  </data>
+  <data name="PermissionDeniedHint" xml:space="preserve">
+    <value>Benachrichtigungen sind blockiert. Aktiviere sie in den Android-Einstellungen.</value>
   </data>
 </root>

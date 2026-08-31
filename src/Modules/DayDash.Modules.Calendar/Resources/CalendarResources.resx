@@ -171,4 +171,10 @@
   <data name="Weekday_Sun" xml:space="preserve">
     <value>So</value>
   </data>
+  <data name="ReminderDaysBefore" xml:space="preserve">
+    <value>Erinnerung (Tage vorher)</value>
+  </data>
+  <data name="ReminderDaysBeforeHint" xml:space="preserve">
+    <value>Leer lassen für die Standard-Vorlaufzeit</value>
+  </data>
 </root>

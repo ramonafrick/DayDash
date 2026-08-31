@@ -13,6 +13,7 @@ using DayDash.Modules.Storage.Infrastructure;
 using DayDash.Modules.StudyPlanner;
 using DayDash.Modules.Widget;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace DayDash.Maui;
 
@@ -23,6 +24,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseLocalNotification()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -36,7 +38,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IAppPreferences, MauiAppPreferences>();
 		builder.Services.AddSingleton<IFileShareService, MauiFileShareService>();
 		builder.Services.AddScoped<ICameraService, MauiCameraService>();
-		builder.Services.AddScoped<IReminderService, MauiReminderService>();
+		builder.Services.AddSingleton<INotificationScheduler, MauiNotificationScheduler>();
 
 		// Feature modules - Settings and Storage first (both leaves).
 		builder.Services
@@ -67,6 +69,17 @@ public static class MauiProgram
 				app.Services.GetRequiredService<StartupState>().DatabaseError = ex;
 				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
 					.LogError(ex, "Database initialization failed");
+			}
+
+			try
+			{
+				scope.ServiceProvider.GetRequiredService<IReminderService>()
+					.RescheduleAllAsync().GetAwaiter().GetResult();
+			}
+			catch (Exception ex)
+			{
+				app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup")
+					.LogError(ex, "Reminder rescheduling failed");
 			}
 		}
 

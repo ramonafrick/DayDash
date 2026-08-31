@@ -71,6 +71,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
         <PackageReference Include="Xamarin.Google.MLKit.TextRecognition" />
+        <PackageReference Include="Plugin.LocalNotification" />
     </ItemGroup>
 
     <ItemGroup>

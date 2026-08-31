@@ -49,6 +49,7 @@ public partial class EventEditComponent
         _model.TimeFrom = Event.TimeFrom;
         _model.TimeTo = Event.TimeTo;
         _model.Notes = Event.Notes;
+        _model.ReminderDaysBefore = Event.ReminderDaysBefore;
     }
 
     private async Task SubmitAsync()
@@ -65,6 +66,7 @@ public partial class EventEditComponent
             TimeFrom = _model.IsAllDay ? null : _model.TimeFrom,
             TimeTo = _model.IsAllDay ? null : _model.TimeTo,
             Notes = string.IsNullOrWhiteSpace(_model.Notes) ? null : _model.Notes.Trim(),
+            ReminderDaysBefore = _model.ReminderDaysBefore,
         };
 
         await OnSave.InvokeAsync(result);
@@ -86,6 +88,8 @@ public partial class EventEditComponent
         public TimeOnly? TimeTo { get; set; }
 
         public string? Notes { get; set; }
+
+        public int? ReminderDaysBefore { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -171,4 +171,10 @@
   <data name="Weekday_Sun" xml:space="preserve">
     <value>Sun</value>
   </data>
+  <data name="ReminderDaysBefore" xml:space="preserve">
+    <value>Reminder (days before)</value>
+  </data>
+  <data name="ReminderDaysBeforeHint" xml:space="preserve">
+    <value>Leave empty for the default lead time</value>
+  </data>
 </root>

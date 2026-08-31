@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DayDash.Modules.Settings\DayDash.Modules.Settings.csproj" />
     <ProjectReference Include="..\DayDash.Modules.Calendar\DayDash.Modules.Calendar.csproj" />
+    <ProjectReference Include="..\DayDash.Modules.StudyPlanner\DayDash.Modules.StudyPlanner.csproj" />
   </ItemGroup>
 
 </Project>

@@ -56,6 +56,14 @@
             <InputTextArea id="ev-notes" class="form-input" @bind-Value="_model.Notes" />
         </div>
 
+        <div class="form-group">
+            <label for="ev-reminder">@Loc["ReminderDaysBefore"]</label>
+            <input id="ev-reminder" type="number" min="0" class="form-input"
+                   value="@_model.ReminderDaysBefore"
+                   @onchange="e => _model.ReminderDaysBefore = ParseDays(e.Value?.ToString())" />
+            <small class="form-hint">@Loc["ReminderDaysBeforeHint"]</small>
+        </div>
+
         <ul class="validation-errors">
             @foreach (var message in context.GetValidationMessages())
             {
@@ -73,4 +81,7 @@
 @code {
     private static TimeOnly? ParseTime(string? value)
         => TimeOnly.TryParse(value, out var t) ? t : null;
+
+    private static int? ParseDays(string? value)
+        => int.TryParse(value, out var d) && d >= 0 ? d : null;
 }

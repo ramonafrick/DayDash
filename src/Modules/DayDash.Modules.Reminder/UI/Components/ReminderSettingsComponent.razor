@@ -1,22 +1,40 @@
-<div class="reminder-settings">
+@inherits CultureAwareComponentBase
+@inject IReminderService ReminderService
+@inject IStringLocalizer<ReminderResources> Loc
+
+<div class="reminder-settings card">
     <h3>@Loc["ReminderSettings"]</h3>
 
-    <div>
-        <label>@Loc["DailyStudyReminderTime"]</label>
-        <input type="time" @bind="DailyStudyReminderTime" />
-    </div>
-
-    <div>
-        <label>@Loc["EventReminderDaysBefore"]</label>
-        <input type="number" @bind="EventReminderDaysBefore" min="0" />
-    </div>
-
-    <div>
-        <label>
-            <input type="checkbox" @bind="IsEnabled" />
-            @Loc["IsEnabled"]
+    <div class="form-group">
+        <label class="checkbox">
+            <input type="checkbox" @bind="_enabled" />
+            @Loc["EnableNotifications"]
         </label>
     </div>
 
-    <button @onclick="SaveSettings">@Loc["Save"]</button>
+    <div class="form-group">
+        <label for="rm-time">@Loc["DailyStudyReminderTime"]</label>
+        <input id="rm-time" type="time" class="form-input"
+               value="@_dailyTime.ToString("HH\\:mm")"
+               @onchange="e => _dailyTime = ParseTime(e.Value?.ToString(), _dailyTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="rm-days">@Loc["EventReminderDaysBefore"]</label>
+        <input id="rm-days" type="number" min="0" class="form-input" @bind="_daysBefore" />
+    </div>
+
+    <div class="actions">
+        <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@_saving">@Loc["Save"]</button>
+    </div>
+
+    @if (_saved)
+    {
+        <p class="success">@Loc["Saved"]</p>
+    }
 </div>
+
+@code {
+    private static TimeOnly ParseTime(string? value, TimeOnly fallback)
+        => TimeOnly.TryParse(value, out var parsed) ? parsed : fallback;
+}

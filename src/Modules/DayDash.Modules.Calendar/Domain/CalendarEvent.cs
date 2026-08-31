@@ -21,6 +21,12 @@ public class CalendarEvent
 
     public bool IsAllDay { get; set; }
 
+    /// <summary>
+    /// Per-event override for how many days before the date its reminder fires.
+    /// Null falls back to the module-wide <c>ReminderConfig.EventReminderDaysBefore</c>.
+    /// </summary>
+    public int? ReminderDaysBefore { get; set; }
+
     /// <summary>Set for "Prüfung" events created through the exam assistant (StudyPlanner).</summary>
     public Guid? LinkedExamId { get; set; }
 }

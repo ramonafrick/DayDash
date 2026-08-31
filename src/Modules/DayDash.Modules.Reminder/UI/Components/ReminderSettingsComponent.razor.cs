@@ -1,29 +1,45 @@
-using DayDash.Modules.Reminder.Application.Contracts;
 using DayDash.Modules.Reminder.Domain;
-using DayDash.Modules.Reminder.Resources;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Localization;
 
 namespace DayDash.Modules.Reminder.UI.Components;
 
 public partial class ReminderSettingsComponent
 {
-    [Inject] private IReminderService ReminderService { get; set; } = default!;
-    [Inject] private IStringLocalizer<ReminderResources> Loc { get; set; } = default!;
+    private TimeOnly _dailyTime = new(15, 30);
+    private int _daysBefore = 1;
+    private bool _enabled = true;
+    private bool _saving;
+    private bool _saved;
 
-    private TimeOnly DailyStudyReminderTime { get; set; } = new TimeOnly(15, 30);
-    private int EventReminderDaysBefore { get; set; } = 1;
-    private bool IsEnabled { get; set; } = true;
-
-    private async Task SaveSettings()
+    protected override async Task OnInitializedAsync()
     {
-        var config = new ReminderConfig
-        {
-            DailyStudyReminderTime = DailyStudyReminderTime,
-            EventReminderDaysBefore = EventReminderDaysBefore,
-            IsEnabled = IsEnabled
-        };
+        var config = await ReminderService.GetConfigAsync();
+        _dailyTime = config.DailyStudyReminderTime;
+        _daysBefore = config.EventReminderDaysBefore;
+        _enabled = config.IsEnabled;
+    }
 
-        await ReminderService.SaveConfigAsync(config);
+    private async Task SaveAsync()
+    {
+        if (_saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        _saved = false;
+        try
+        {
+            await ReminderService.SaveConfigAsync(new ReminderConfig
+            {
+                DailyStudyReminderTime = _dailyTime,
+                EventReminderDaysBefore = _daysBefore < 0 ? 0 : _daysBefore,
+                IsEnabled = _enabled,
+            });
+            _saved = true;
+        }
+        finally
+        {
+            _saving = false;
+        }
     }
 }
