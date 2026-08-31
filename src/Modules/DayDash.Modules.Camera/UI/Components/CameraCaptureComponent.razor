@@ -1,20 +1,73 @@
+@inherits CultureAwareComponentBase
 @inject IStringLocalizer<CameraResources> Loc
 @inject ICameraService CameraService
 @inject ILearningGoalParser LearningGoalParser
+@inject IStudyPlannerService StudyPlanner
 
-<div>
-    <button @onclick="CapturePhotoAsync" disabled="@IsLoading">
-        @Loc["CapturePhoto"]
-    </button>
-    
-    @if (IsLoading)
+<div class="camera-page">
+    <h1>@Loc["CameraTitle"]</h1>
+
+    @if (_exams.Count == 0)
     {
-        <p>@Loc["Loading"]</p>
+        <p class="hint">@Loc["NoExamSelected"]</p>
     }
-
-    @if (ParsedGoals.Any())
+    else
     {
-        <h3>@Loc["ParsedGoals"]</h3>
-        <LearningGoalEditComponent Goals="ParsedGoals" OnGoalsSaved="HandleGoalsSaved" />
+        <div class="form-field">
+            <label for="camera-exam-select">@Loc["SelectExam"]</label>
+            <select id="camera-exam-select" class="form-input" value="@_selectedExamId"
+                    @onchange="OnExamChanged" disabled="@_busy">
+                @foreach (var exam in _exams)
+                {
+                    <option value="@exam.Id">@exam.Title (@exam.Subject)</option>
+                }
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-primary" @onclick="CaptureAsync" disabled="@_busy">
+            @Loc["CapturePhoto"]
+        </button>
+
+        @if (_busy)
+        {
+            <p class="hint">@Loc["Recognizing"]</p>
+        }
+
+        @if (_status == OcrCaptureStatus.Success)
+        {
+            <h2>@Loc["ParsedGoals"]</h2>
+            <LearningGoalEditComponent Goals="_goals" OnGoalsSaved="SaveGoalsAsync" />
+        }
+        else if (_status == OcrCaptureStatus.NoTextFound)
+        {
+            <p class="hint">@Loc["NothingRecognized"]</p>
+            <button type="button" class="btn btn-secondary" @onclick="CaptureAsync" disabled="@_busy">@Loc["Retake"]</button>
+        }
+        else if (_status == OcrCaptureStatus.Cancelled)
+        {
+            <p class="hint">@Loc["CaptureCancelled"]</p>
+        }
+        else if (_status == OcrCaptureStatus.PermissionDenied)
+        {
+            <p class="error">@Loc["PermissionDenied"]</p>
+        }
+        else if (_status == OcrCaptureStatus.NotSupported)
+        {
+            <p class="hint">@Loc["CameraNotAvailable"]</p>
+        }
+        else if (_status == OcrCaptureStatus.Failed)
+        {
+            <p class="error">@Loc["RecognitionFailed"]</p>
+            <button type="button" class="btn btn-secondary" @onclick="CaptureAsync" disabled="@_busy">@Loc["Retake"]</button>
+        }
+
+        @if (_saveState == SaveResult.Saved)
+        {
+            <p class="success">@Loc["GoalsSaved"]</p>
+        }
+        else if (_saveState == SaveResult.Failed)
+        {
+            <p class="error">@Loc["GoalsSaveFailed"]</p>
+        }
     }
 </div>

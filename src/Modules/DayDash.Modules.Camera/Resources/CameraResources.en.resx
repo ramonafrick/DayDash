@@ -1,27 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <data name="CapturePhoto" xml:space="preserve">
-    <value>Capture Photo</value>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Camera</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Loading...</value>
+  <data name="CameraTitle" xml:space="preserve">
+    <value>Photograph learning goals</value>
+  </data>
+  <data name="CapturePhoto" xml:space="preserve">
+    <value>Take photo</value>
+  </data>
+  <data name="Recognizing" xml:space="preserve">
+    <value>Recognising text...</value>
   </data>
   <data name="ParsedGoals" xml:space="preserve">
-    <value>Parsed Learning Goals</value>
+    <value>Recognised learning goals</value>
+  </data>
+  <data name="NothingRecognized" xml:space="preserve">
+    <value>No text was recognised. Please try again.</value>
+  </data>
+  <data name="CameraNotAvailable" xml:space="preserve">
+    <value>The camera is not available in the browser preview.</value>
+  </data>
+  <data name="PermissionDenied" xml:space="preserve">
+    <value>No access to the camera. Allow access in the settings.</value>
+  </data>
+  <data name="CaptureCancelled" xml:space="preserve">
+    <value>Capture cancelled.</value>
+  </data>
+  <data name="RecognitionFailed" xml:space="preserve">
+    <value>Text recognition failed. Please try again.</value>
+  </data>
+  <data name="Retake" xml:space="preserve">
+    <value>Retake</value>
+  </data>
+  <data name="SelectExam" xml:space="preserve">
+    <value>Select exam</value>
+  </data>
+  <data name="NoExamSelected" xml:space="preserve">
+    <value>Create an exam first to add learning goals.</value>
+  </data>
+  <data name="AttachToExam" xml:space="preserve">
+    <value>Add to exam</value>
+  </data>
+  <data name="GoalsSaved" xml:space="preserve">
+    <value>Learning goals saved.</value>
+  </data>
+  <data name="GoalsSaveFailed" xml:space="preserve">
+    <value>The learning goals could not be saved.</value>
   </data>
   <data name="AddRow" xml:space="preserve">
-    <value>Add Row</value>
+    <value>Add row</value>
   </data>
   <data name="DeleteRow" xml:space="preserve">
-    <value>Delete Row</value>
+    <value>Delete row</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move Up</value>
+    <value>Move up</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move Down</value>
+    <value>Move down</value>
   </data>
   <data name="SaveGoals" xml:space="preserve">
-    <value>Save Goals</value>
+    <value>Save goals</value>
   </data>
 </root>

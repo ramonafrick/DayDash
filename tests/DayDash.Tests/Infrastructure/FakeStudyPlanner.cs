@@ -37,6 +37,8 @@ public sealed class FakeStudyPlannerService(FakeSubjectConfigService subjects) :
     public List<Exam> Exams { get; } = [];
     public Exam? LastCreated { get; private set; }
     public Guid? LastGoalToggled { get; private set; }
+    public Guid? LastSavedGoalsExamId { get; private set; }
+    public IReadOnlyList<LearningGoal>? LastSavedGoals { get; private set; }
 
     public Task<IReadOnlyList<Exam>> GetExamsAsync(CancellationToken ct = default)
         => Task.FromResult<IReadOnlyList<Exam>>(Exams.ToList());
@@ -71,7 +73,11 @@ public sealed class FakeStudyPlannerService(FakeSubjectConfigService subjects) :
     }
 
     public Task SaveLearningGoalsAsync(Guid examId, IReadOnlyList<LearningGoal> goals, CancellationToken ct = default)
-        => Task.CompletedTask;
+    {
+        LastSavedGoalsExamId = examId;
+        LastSavedGoals = goals.ToList();
+        return Task.CompletedTask;
+    }
 
     public async Task<int> CalculateRecommendedMinutesAsync(int goalCount, string subject, CancellationToken ct = default)
         => StudyMath.RecommendedMinutes(goalCount, await subjects.GetMinutesPerGoalAsync(subject, ct));

@@ -1,34 +1,97 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Localization;
-using DayDash.Modules.Camera.Application.Contracts;
+using DayDash.Modules.Camera.Application.Models;
 using DayDash.Modules.StudyPlanner.Domain;
+using Microsoft.AspNetCore.Components;
 
 namespace DayDash.Modules.Camera.UI.Components;
 
 public partial class CameraCaptureComponent
 {
-    private bool IsLoading { get; set; } = false;
-    private List<LearningGoal> ParsedGoals { get; set; } = new();
+    /// <summary>Optional exam to attach recognised goals to. When null the user picks one from the list.</summary>
+    [Parameter] public Guid? ExamId { get; set; }
 
-    private async Task CapturePhotoAsync()
+    private readonly List<Exam> _exams = [];
+    private Guid _selectedExamId;
+    private bool _busy;
+    private OcrCaptureStatus? _status;
+    private List<LearningGoal> _goals = [];
+    private SaveResult _saveState;
+
+    private enum SaveResult
     {
-        IsLoading = true;
-        try
+        None,
+        Saved,
+        Failed,
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var exams = await StudyPlanner.GetExamsAsync();
+        _exams.Clear();
+        _exams.AddRange(exams);
+
+        _selectedExamId = ExamId is { } id && _exams.Any(e => e.Id == id)
+            ? id
+            : _exams.FirstOrDefault()?.Id ?? Guid.Empty;
+    }
+
+    private void OnExamChanged(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out var id))
         {
-            var ocrText = await CameraService.CaptureAndRecognizeTextAsync();
-            ParsedGoals = LearningGoalParser.ParseToLearningGoals(ocrText, Guid.NewGuid());
-        }
-        finally
-        {
-            IsLoading = false;
+            _selectedExamId = id;
         }
     }
 
-    private void HandleGoalsSaved(List<LearningGoal> goals)
+    private async Task CaptureAsync()
     {
-        ParsedGoals = goals;
+        if (_selectedExamId == Guid.Empty || _busy)
+        {
+            return;
+        }
+
+        _busy = true;
+        _status = null;
+        _saveState = SaveResult.None;
+        _goals = [];
+
+        try
+        {
+            var result = await CameraService.CaptureAndRecognizeTextAsync();
+            _status = result.Status;
+
+            if (result.Status == OcrCaptureStatus.Success)
+            {
+                _goals = LearningGoalParser.ParseToLearningGoals(result.Text, _selectedExamId);
+                if (_goals.Count == 0)
+                {
+                    _status = OcrCaptureStatus.NoTextFound;
+                }
+            }
+        }
+        catch
+        {
+            _status = OcrCaptureStatus.Failed;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private async Task SaveGoalsAsync(List<LearningGoal> goals)
+    {
+        try
+        {
+            await StudyPlanner.SaveLearningGoalsAsync(_selectedExamId, goals);
+            _saveState = SaveResult.Saved;
+        }
+        catch
+        {
+            _saveState = SaveResult.Failed;
+        }
     }
 }
