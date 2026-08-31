@@ -5,6 +5,7 @@ namespace DayDash.Modules.Calendar.Application.Contracts;
 public interface ICalendarService
 {
     Task<IReadOnlyList<CalendarEvent>> GetEventsForMonthAsync(int year, int month, CancellationToken ct = default);
+    Task<IReadOnlyList<CalendarEvent>> GetEventsInRangeAsync(DateOnly from, DateOnly to, CancellationToken ct = default);
     Task<IReadOnlyList<CalendarEvent>> GetEventsForWeekAsync(DateOnly startOfWeek, CancellationToken ct = default);
     Task<IReadOnlyList<CalendarEvent>> GetEventsForDayAsync(DateOnly date, CancellationToken ct = default);
     Task<CalendarEvent?> GetEventAsync(Guid eventId, CancellationToken ct = default);

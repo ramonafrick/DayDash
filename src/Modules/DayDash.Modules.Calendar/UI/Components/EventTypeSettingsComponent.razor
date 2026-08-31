@@ -32,7 +32,10 @@
                         </td>
                         <td class="row-actions">
                             <button class="btn btn-secondary" @onclick="() => SaveAsync(type)">@Loc["Save"]</button>
-                            <button class="btn btn-error" @onclick="() => RequestDelete(type)">@Loc["Delete"]</button>
+                            @if (!type.IsDefault)
+                            {
+                                <button class="btn btn-error" @onclick="() => RequestDelete(type)">@Loc["Delete"]</button>
+                            }
                         </td>
                     </tr>
                 }
@@ -51,6 +54,6 @@
 </div>
 
 <DeleteConfirmDialog Visible="_pendingDelete is not null"
-                     Message="@Loc["EventTypeInUse"]"
+                     Message="@Loc["ConfirmDeleteEventType"]"
                      OnConfirm="ConfirmDeleteAsync"
                      OnCancel="CancelDelete" />

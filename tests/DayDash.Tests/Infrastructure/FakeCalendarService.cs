@@ -10,8 +10,10 @@ public sealed class FakeCalendarService : ICalendarService
     public List<EventTypeConfig> Types { get; } = [];
 
     public int MonthQueries { get; private set; }
+    public int RangeQueries { get; private set; }
     public int WeekQueries { get; private set; }
     public (int Year, int Month) LastMonthQuery { get; private set; }
+    public (DateOnly From, DateOnly To) LastRangeQuery { get; private set; }
     public CalendarEvent? LastCreated { get; private set; }
     public CalendarEvent? LastUpdated { get; private set; }
     public Guid? LastDeleted { get; private set; }
@@ -23,6 +25,14 @@ public sealed class FakeCalendarService : ICalendarService
         LastMonthQuery = (year, month);
         return Task.FromResult<IReadOnlyList<CalendarEvent>>(
             Events.Where(e => e.Date.Year == year && e.Date.Month == month).ToList());
+    }
+
+    public Task<IReadOnlyList<CalendarEvent>> GetEventsInRangeAsync(DateOnly from, DateOnly to, CancellationToken ct = default)
+    {
+        RangeQueries++;
+        LastRangeQuery = (from, to);
+        return Task.FromResult<IReadOnlyList<CalendarEvent>>(
+            Events.Where(e => e.Date >= from && e.Date <= to).ToList());
     }
 
     public Task<IReadOnlyList<CalendarEvent>> GetEventsForWeekAsync(DateOnly startOfWeek, CancellationToken ct = default)

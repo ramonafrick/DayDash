@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DayDash.Modules.Calendar.Domain;
 using DayDash.Modules.Calendar.Resources;
-using DayDash.Modules.Settings.UI;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
@@ -10,6 +9,7 @@ namespace DayDash.Modules.Calendar.UI.Components;
 public partial class EventEditComponent
 {
     [Inject] private IStringLocalizer<CalendarResources> Loc { get; set; } = default!;
+    [Inject] private TimeProvider Time { get; set; } = default!;
 
     /// <summary>Null to create a new event.</summary>
     [Parameter] public CalendarEvent? Event { get; set; }
@@ -19,13 +19,26 @@ public partial class EventEditComponent
     [Parameter] public EventCallback<CalendarEvent> OnSave { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
 
-    private readonly EditModel _model = new();
+    private EditModel _model = new();
+    private Guid? _boundEventId;
+    private bool _bound;
     private bool IsNew => Event is null;
 
     protected override void OnParametersSet()
     {
+        // Rebind when the target event changes (incl. edit -> "New event" while the panel is open).
+        if (_bound && Event?.Id == _boundEventId)
+        {
+            return;
+        }
+
+        _bound = true;
+        _boundEventId = Event?.Id;
+        _model = new EditModel();
+
         if (Event is null)
         {
+            _model.Date = DateOnly.FromDateTime(Time.GetLocalNow().Date);
             return;
         }
 
@@ -40,17 +53,21 @@ public partial class EventEditComponent
 
     private async Task SubmitAsync()
     {
-        var target = Event ?? new CalendarEvent { Id = Guid.NewGuid() };
-        target.Title = _model.Title.Trim();
-        target.EventTypeId = _model.EventTypeId;
-        target.EventType = null;
-        target.Date = _model.Date;
-        target.IsAllDay = _model.IsAllDay;
-        target.TimeFrom = _model.IsAllDay ? null : _model.TimeFrom;
-        target.TimeTo = _model.IsAllDay ? null : _model.TimeTo;
-        target.Notes = string.IsNullOrWhiteSpace(_model.Notes) ? null : _model.Notes.Trim();
+        // Build a detached copy so a failed save never leaves half-applied values in the caller's list.
+        var result = new CalendarEvent
+        {
+            Id = Event?.Id ?? Guid.NewGuid(),
+            LinkedExamId = Event?.LinkedExamId,
+            Title = _model.Title.Trim(),
+            EventTypeId = _model.EventTypeId,
+            Date = _model.Date,
+            IsAllDay = _model.IsAllDay,
+            TimeFrom = _model.IsAllDay ? null : _model.TimeFrom,
+            TimeTo = _model.IsAllDay ? null : _model.TimeTo,
+            Notes = string.IsNullOrWhiteSpace(_model.Notes) ? null : _model.Notes.Trim(),
+        };
 
-        await OnSave.InvokeAsync(target);
+        await OnSave.InvokeAsync(result);
     }
 
     private sealed class EditModel : IValidatableObject

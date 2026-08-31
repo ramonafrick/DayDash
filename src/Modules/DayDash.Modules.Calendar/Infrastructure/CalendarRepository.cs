@@ -29,6 +29,7 @@ public class CalendarRepository(DayDashDbContext context) : BaseRepository<Calen
 
     private IQueryable<CalendarEvent> OrderedQuery() =>
         _context.Set<CalendarEvent>()
+            .AsNoTracking()
             .Include(e => e.EventType)
             .OrderBy(e => e.Date)
             .ThenBy(e => e.TimeFrom);

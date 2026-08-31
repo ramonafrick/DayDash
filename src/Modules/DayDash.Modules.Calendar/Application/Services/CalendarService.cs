@@ -13,6 +13,9 @@ public class CalendarService(
     public Task<IReadOnlyList<CalendarEvent>> GetEventsForMonthAsync(int year, int month, CancellationToken ct = default)
         => repository.GetByMonthAsync(year, month, ct);
 
+    public Task<IReadOnlyList<CalendarEvent>> GetEventsInRangeAsync(DateOnly from, DateOnly to, CancellationToken ct = default)
+        => repository.GetByDateRangeAsync(from, to, ct);
+
     public Task<IReadOnlyList<CalendarEvent>> GetEventsForWeekAsync(DateOnly startOfWeek, CancellationToken ct = default)
         => repository.GetByDateRangeAsync(startOfWeek, startOfWeek.AddDays(6), ct);
 
@@ -47,7 +50,7 @@ public class CalendarService(
     }
 
     public async Task<IReadOnlyList<EventTypeConfig>> GetEventTypesAsync(CancellationToken ct = default)
-        => await repository.Context.Set<EventTypeConfig>().OrderBy(t => t.Name).ToListAsync(ct);
+        => await repository.Context.Set<EventTypeConfig>().AsNoTracking().OrderBy(t => t.Name).ToListAsync(ct);
 
     public async Task SaveEventTypeAsync(EventTypeConfig eventTypeConfig, CancellationToken ct = default)
     {
@@ -72,9 +75,9 @@ public class CalendarService(
     {
         var set = repository.Context.Set<EventTypeConfig>();
         var existing = await set.FindAsync([eventTypeId], ct);
-        if (existing is null)
+        if (existing is null || existing.IsDefault)
         {
-            return;
+            return; // built-in types cannot be deleted (their Key drives the exam-assistant trigger).
         }
 
         set.Remove(existing); // FK is DeleteBehavior.SetNull - events keep their row, EventTypeId is cleared.

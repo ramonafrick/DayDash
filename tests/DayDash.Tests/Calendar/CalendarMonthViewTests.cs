@@ -43,19 +43,22 @@ public class CalendarMonthViewTests : CultureIsolatedTest
     }
 
     [Fact]
-    public void Navigating_months_re_queries_the_service()
+    public void Navigating_months_re_queries_the_visible_grid_range()
     {
         var calendar = new FakeCalendarService();
         using var ctx = NewContext(calendar);
 
-        var cut = ctx.RenderComponent<CalendarMonthView>();
-        Assert.Equal((2026, 3), calendar.LastMonthQuery); // fixture "today" = 2026-03-10
+        var cut = ctx.RenderComponent<CalendarMonthView>(); // fixture "today" = 2026-03-10
+        Assert.Equal(1, calendar.RangeQueries);
+        Assert.True(calendar.LastRangeQuery.From <= new DateOnly(2026, 3, 1));
+        Assert.True(calendar.LastRangeQuery.To >= new DateOnly(2026, 3, 31));
 
-        cut.FindAll("button.btn")[0].Click(); // Previous
-        Assert.Equal((2026, 2), calendar.LastMonthQuery);
+        cut.FindAll("button.btn")[0].Click(); // Previous -> February
+        Assert.True(calendar.LastRangeQuery.From <= new DateOnly(2026, 2, 1));
 
         cut.FindAll("button.btn")[1].Click(); // Next
-        cut.FindAll("button.btn")[1].Click();
-        Assert.Equal((2026, 4), calendar.LastMonthQuery);
+        cut.FindAll("button.btn")[1].Click(); // Next -> April
+        Assert.True(calendar.LastRangeQuery.To >= new DateOnly(2026, 4, 30));
+        Assert.Equal(4, calendar.RangeQueries);
     }
 }

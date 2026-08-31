@@ -144,6 +144,9 @@
   <data name="EventTypeInUse" xml:space="preserve">
     <value>This type is in use</value>
   </data>
+  <data name="ConfirmDeleteEventType" xml:space="preserve">
+    <value>Delete this event type?</value>
+  </data>
   <data name="NoType" xml:space="preserve">
     <value>No type</value>
   </data>

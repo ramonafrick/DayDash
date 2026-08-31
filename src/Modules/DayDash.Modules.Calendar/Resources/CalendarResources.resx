@@ -144,6 +144,9 @@
   <data name="EventTypeInUse" xml:space="preserve">
     <value>Dieser Typ wird verwendet</value>
   </data>
+  <data name="ConfirmDeleteEventType" xml:space="preserve">
+    <value>Diesen Ereignistyp löschen?</value>
+  </data>
   <data name="NoType" xml:space="preserve">
     <value>Kein Typ</value>
   </data>

@@ -45,7 +45,12 @@ public partial class CalendarMonthView
 
     private async Task ReloadAsync()
     {
-        var events = await Calendar.GetEventsForMonthAsync(_month.Year, _month.Month);
+        // Fetch the whole visible grid range so events on leading/trailing days also show dots.
+        var lead = ((int)_month.DayOfWeek - (int)FirstDayOfWeek + 7) % 7;
+        var gridStart = _month.AddDays(-lead);
+        var gridEnd = gridStart.AddDays(CalendarGridBuilder.WeekCount * CalendarGridBuilder.DaysPerWeek - 1);
+
+        var events = await Calendar.GetEventsInRangeAsync(gridStart, gridEnd);
         var types = await Calendar.GetEventTypesAsync();
         _weeks = CalendarGridBuilder.Build(_month.Year, _month.Month, FirstDayOfWeek, Today, events, types);
     }

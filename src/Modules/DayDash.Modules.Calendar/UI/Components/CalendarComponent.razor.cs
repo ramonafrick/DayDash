@@ -39,12 +39,21 @@ public partial class CalendarComponent
     protected override async Task OnInitializedAsync()
         => _eventTypes = await Calendar.GetEventTypesAsync();
 
-    private void ShowMonth() => _showWeek = false;
+    private void ShowMonth()
+    {
+        _showWeek = false;
+        _toast = null;
+    }
 
-    private void ShowWeek() => _showWeek = true;
+    private void ShowWeek()
+    {
+        _showWeek = true;
+        _toast = null;
+    }
 
     private async Task OnDaySelectedAsync(DateOnly date)
     {
+        _toast = null;
         _selectedDay = date;
         _dayEvents = await Calendar.GetEventsForDayAsync(date);
         _panel = Panel.DayList;
@@ -58,6 +67,7 @@ public partial class CalendarComponent
 
     private async Task StartCreateAsync()
     {
+        _toast = null;
         _eventTypes = await Calendar.GetEventTypesAsync();
         _editEvent = null;
         _panel = Panel.Edit;
@@ -65,6 +75,7 @@ public partial class CalendarComponent
 
     private async Task StartEditAsync(CalendarEvent e)
     {
+        _toast = null;
         _eventTypes = await Calendar.GetEventTypesAsync();
         _editEvent = e;
         _panel = Panel.Edit;
@@ -116,7 +127,7 @@ public partial class CalendarComponent
             await FileShare.ShareFileAsync(path, Loc["ExportIcs"]);
             _toast = Loc["ExportSuccess"];
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             _toast = Loc["ExportFailed"];
         }
