@@ -8,23 +8,30 @@ namespace DayDash.Modules.StudyPlanner.UI.Components;
 
 public partial class TodayStudyPlanComponent
 {
-    private List<Exam> TodayPlans { get; set; } = new();
-
     [Inject] private IStringLocalizer<StudyPlannerResources> Loc { get; set; } = default!;
-    [Inject] private IStudyPlannerService StudyPlannerService { get; set; } = default!;
+    [Inject] private IStudyPlannerService StudyPlanner { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
+    private IReadOnlyList<Exam> _plan = [];
+    private int _totalMinutes;
+
+    [Parameter] public int RefreshToken { get; set; }
+
+    private int _lastRefreshToken;
+
+    protected override async Task OnInitializedAsync() => await ReloadAsync();
+
+    protected override async Task OnParametersSetAsync()
     {
-        try
+        if (RefreshToken != _lastRefreshToken)
         {
-            TodayPlans = (await StudyPlannerService.GetTodayStudyPlanAsync()).ToList();
+            _lastRefreshToken = RefreshToken;
+            await ReloadAsync();
         }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("cannot be used for entity type", StringComparison.Ordinal)
-                                                   || ex.Message.Contains("was not found in the model", StringComparison.Ordinal))
-        {
-            // The persistence model is not assembled until the Storage slice - show the empty state.
-            // TODO(Slice 3): remove this guard once the StudyPlanner model exists.
-            TodayPlans = [];
-        }
+    }
+
+    private async Task ReloadAsync()
+    {
+        _plan = await StudyPlanner.GetTodayStudyPlanAsync();
+        _totalMinutes = _plan.Sum(e => e.DailyMinutes);
     }
 }

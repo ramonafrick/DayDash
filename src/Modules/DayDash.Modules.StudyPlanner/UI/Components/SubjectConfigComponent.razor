@@ -1,27 +1,42 @@
+@inherits CultureAwareComponentBase
 
-<h3>@Loc["SubjectConfig"]</h3>
+<div class="subject-config container">
+    <h1 class="page-title">@Loc["SubjectConfig"]</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>@Loc["Subject"]</th>
-            <th>@Loc["MinutesPerGoal"]</th>
-            <th>@Loc["Actions"]</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var subject in Subjects)
-        {
-            <tr>
-                <td><InputText @bind-Value="subject.Name" /></td>
-                <td><InputNumber @bind-Value="subject.MinutesPerGoal" /></td>
-                <td>
-                    <button @onclick="() => DeleteSubject(subject)">@Loc["Delete"]</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (_toast is not null)
+    {
+        <div class="alert alert-info" role="status">@_toast</div>
+    }
 
-<button @onclick="AddSubject">@Loc["AddSubject"]</button>
-<button @onclick="SaveConfig">@Loc["Save"]</button>
+    <div class="card">
+        <table class="subject-table">
+            <thead>
+                <tr>
+                    <th>@Loc["Subject"]</th>
+                    <th>@Loc["MinutesPerGoal"]</th>
+                    <th>@Loc["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in _subjects)
+                {
+                    <tr>
+                        <td>
+                            <input type="text" class="form-input" value="@subject.Name"
+                                   @onchange="e => subject.Name = e.Value?.ToString() ?? subject.Name" />
+                        </td>
+                        <td>
+                            <input type="number" min="0" class="form-input" value="@subject.MinutesPerGoal"
+                                   @onchange="e => subject.MinutesPerGoal = int.TryParse(e.Value?.ToString(), out var v) ? v : subject.MinutesPerGoal" />
+                        </td>
+                        <td class="row-actions">
+                            <button class="btn btn-secondary" @onclick="() => SaveAsync(subject)">@Loc["Save"]</button>
+                            <button class="btn btn-error" @onclick="() => DeleteAsync(subject)">@Loc["Delete"]</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button class="btn btn-primary" @onclick="AddAsync">@Loc["AddSubject"]</button>
+    </div>
+</div>

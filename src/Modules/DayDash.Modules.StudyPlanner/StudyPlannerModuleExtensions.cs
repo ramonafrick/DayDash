@@ -17,6 +17,7 @@ public static class StudyPlannerModuleExtensions
 
         services.AddScoped<IExamRepository, ExamRepository>();
         services.AddScoped<ISubjectConfigRepository, SubjectConfigRepository>();
+        services.AddScoped<ISubjectConfigService, SubjectConfigService>();
         services.AddScoped<IStudyPlannerService, StudyPlannerService>();
 
         services.AddLocalization();

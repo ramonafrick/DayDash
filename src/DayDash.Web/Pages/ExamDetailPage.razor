@@ -1,0 +1,10 @@
+@page "/study/exams/{ExamId:guid}"
+@inject IStringLocalizer<DayDash.Modules.StudyPlanner.Resources.StudyPlannerResources> Loc
+
+<PageTitle>@Loc["ExamDetails"]</PageTitle>
+
+<ExamDetailComponent ExamId="ExamId" />
+
+@code {
+    [Parameter] public Guid ExamId { get; set; }
+}

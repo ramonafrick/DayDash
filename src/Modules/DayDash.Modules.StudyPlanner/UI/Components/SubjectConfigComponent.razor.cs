@@ -8,31 +8,36 @@ namespace DayDash.Modules.StudyPlanner.UI.Components;
 
 public partial class SubjectConfigComponent
 {
-    private List<SubjectConfig> Subjects { get; set; } = new();
-
     [Inject] private IStringLocalizer<StudyPlannerResources> Loc { get; set; } = default!;
-    [Inject] private IStudyPlannerService StudyPlannerService { get; set; } = default!;
+    [Inject] private ISubjectConfigService Subjects { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
+    private readonly List<SubjectConfig> _subjects = [];
+    private string? _toast;
+
+    protected override async Task OnInitializedAsync() => await ReloadAsync();
+
+    private async Task ReloadAsync()
     {
-        Subjects = (await StudyPlannerService.GetSubjectConfigsAsync()).ToList();
+        _subjects.Clear();
+        _subjects.AddRange(await Subjects.GetAllAsync());
     }
 
-    private void AddSubject()
+    private async Task SaveAsync(SubjectConfig subject)
     {
-        Subjects.Add(new SubjectConfig { Id = Guid.NewGuid(), Name = Loc["NewSubject"], MinutesPerGoal = 15 });
+        await Subjects.SaveAsync(subject);
+        _toast = Loc["Saved"];
     }
 
-    private void DeleteSubject(SubjectConfig subject)
+    private async Task AddAsync()
     {
-        Subjects.Remove(subject);
+        var created = new SubjectConfig { Id = Guid.NewGuid(), Name = Loc["NewSubject"], MinutesPerGoal = SubjectConfig.DefaultMinutesPerGoal };
+        await Subjects.SaveAsync(created);
+        await ReloadAsync();
     }
 
-    private async Task SaveConfig()
+    private async Task DeleteAsync(SubjectConfig subject)
     {
-        foreach (var subject in Subjects)
-        {
-            await StudyPlannerService.SaveSubjectConfigAsync(subject);
-        }
+        await Subjects.DeleteAsync(subject.Id);
+        await ReloadAsync();
     }
 }

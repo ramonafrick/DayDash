@@ -1,0 +1,58 @@
+@inherits CultureAwareComponentBase
+@inject IStringLocalizer<StudyPlannerResources> Loc
+
+<ul class="goal-list">
+    @foreach (var goal in Goals)
+    {
+        <li>
+            @if (Editable)
+            {
+                <input type="text" class="form-input" value="@goal.Text"
+                       @onchange="e => { goal.Text = e.Value?.ToString() ?? string.Empty; OnGoalsChanged.InvokeAsync(); }" />
+                <button type="button" class="btn btn-error" @onclick="() => Remove(goal)">@Loc["RemoveGoal"]</button>
+            }
+            else
+            {
+                <label class="goal-check">
+                    <input type="checkbox" checked="@goal.IsChecked"
+                           @onchange="e => Toggle(goal, (bool)(e.Value ?? false))" />
+                    <span class="@(goal.IsChecked ? "done" : "")">@goal.Text</span>
+                </label>
+            }
+        </li>
+    }
+</ul>
+
+@if (Editable)
+{
+    <button type="button" class="btn btn-secondary" @onclick="Add">@Loc["AddGoal"]</button>
+}
+
+@code {
+    [Parameter] public List<LearningGoal> Goals { get; set; } = [];
+    [Parameter] public bool Editable { get; set; }
+
+    /// <summary>Editable mode: raised whenever the goal list changes.</summary>
+    [Parameter] public EventCallback OnGoalsChanged { get; set; }
+
+    /// <summary>Checkable mode: raised when a checkbox is toggled.</summary>
+    [Parameter] public EventCallback<LearningGoal> OnGoalToggled { get; set; }
+
+    private async Task Add()
+    {
+        Goals.Add(new LearningGoal { Id = Guid.NewGuid(), Text = string.Empty, SortOrder = Goals.Count });
+        await OnGoalsChanged.InvokeAsync();
+    }
+
+    private async Task Remove(LearningGoal goal)
+    {
+        Goals.Remove(goal);
+        await OnGoalsChanged.InvokeAsync();
+    }
+
+    private async Task Toggle(LearningGoal goal, bool value)
+    {
+        goal.IsChecked = value;
+        await OnGoalToggled.InvokeAsync(goal);
+    }
+}

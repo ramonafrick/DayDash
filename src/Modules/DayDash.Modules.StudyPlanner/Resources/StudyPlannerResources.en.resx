@@ -72,4 +72,100 @@
   <data name="DefaultSubject_French" xml:space="preserve">
     <value>French</value>
   </data>
+  <data name="MinutesPerGoal" xml:space="preserve">
+    <value>Minutes per goal</value>
+  </data>
+  <data name="NewSubject" xml:space="preserve">
+    <value>New subject</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Study plan</value>
+  </data>
+  <data name="StudyPlanTitle" xml:space="preserve">
+    <value>Study plan</value>
+  </data>
+  <data name="ExamList" xml:space="preserve">
+    <value>Exams</value>
+  </data>
+  <data name="NewExam" xml:space="preserve">
+    <value>New exam</value>
+  </data>
+  <data name="EditExam" xml:space="preserve">
+    <value>Edit exam</value>
+  </data>
+  <data name="DeleteExam" xml:space="preserve">
+    <value>Delete exam</value>
+  </data>
+  <data name="ConfirmDeleteExam" xml:space="preserve">
+    <value>Really delete this exam?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NoExams" xml:space="preserve">
+    <value>No exams</value>
+  </data>
+  <data name="AddGoal" xml:space="preserve">
+    <value>Add goal</value>
+  </data>
+  <data name="GoalText" xml:space="preserve">
+    <value>Learning goal</value>
+  </data>
+  <data name="RemoveGoal" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="TotalMinutesToday" xml:space="preserve">
+    <value>Total today</value>
+  </data>
+  <data name="NoStudyToday" xml:space="preserve">
+    <value>Nothing to study today</value>
+  </data>
+  <data name="ExamAssistant" xml:space="preserve">
+    <value>Exam assistant</value>
+  </data>
+  <data name="StepSubject" xml:space="preserve">
+    <value>Subject &amp; date</value>
+  </data>
+  <data name="StepGoals" xml:space="preserve">
+    <value>Learning goals</value>
+  </data>
+  <data name="StepMinutes" xml:space="preserve">
+    <value>Study time</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="TitleRequired" xml:space="preserve">
+    <value>Please enter a title</value>
+  </data>
+  <data name="SubjectRequired" xml:space="preserve">
+    <value>Please pick a subject</value>
+  </data>
+  <data name="MinutesRange" xml:space="preserve">
+    <value>Between 0 and 10000 minutes</value>
+  </data>
+  <data name="Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="TodayLabel" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="TomorrowLabel" xml:space="preserve">
+    <value>tomorrow</value>
+  </data>
+  <data name="SubjectDeletedFallback" xml:space="preserve">
+    <value>Subject removed - 15 min/goal</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>days</value>
+  </data>
 </root>

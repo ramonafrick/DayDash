@@ -1,9 +1,20 @@
+@inherits CultureAwareComponentBase
 
-<h3>@Loc["TodayStudyPlan"]</h3>
+<div class="today-study-plan card">
+    <h3>@Loc["TodayStudyPlan"]</h3>
 
-<ul>
-    @foreach (var plan in TodayPlans)
+    @if (_plan.Count == 0)
     {
-        <li>@Loc["Study"]: @plan.Subject – @plan.DailyMinutes @Loc["Minutes"]</li>
+        <p>@Loc["NoStudyToday"]</p>
     }
-</ul>
+    else
+    {
+        <ul>
+            @foreach (var exam in _plan)
+            {
+                <li>@Loc["Study"]: @exam.Subject – @exam.DailyMinutes @Loc["Minutes"]</li>
+            }
+        </ul>
+        <p class="total">@Loc["TotalMinutesToday"]: @_totalMinutes @Loc["Minutes"]</p>
+    }
+</div>

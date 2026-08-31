@@ -11,7 +11,7 @@ namespace DayDash.Modules.Calendar.UI.Components;
 
 public partial class CalendarComponent
 {
-    private enum Panel { None, DayList, Detail, Edit }
+    private enum Panel { None, DayList, Detail, Edit, ExamAssistant }
 
     [Inject] private IStringLocalizer<CalendarResources> Loc { get; set; } = default!;
     [Inject] private ICalendarService Calendar { get; set; } = default!;
@@ -35,6 +35,9 @@ public partial class CalendarComponent
 
     private CalendarEvent? _pendingDelete;
     private string? _toast;
+
+    private CalendarEvent? _pendingExamEvent;
+    private ExamAssistantRequest? _examRequest;
 
     protected override async Task OnInitializedAsync()
         => _eventTypes = await Calendar.GetEventTypesAsync();
@@ -83,6 +86,24 @@ public partial class CalendarComponent
 
     private async Task SaveAsync(CalendarEvent e)
     {
+        await PersistAsync(e);
+
+        // A new "Prüfung" event with no linked exam yet -> offer the exam assistant (FR-C6).
+        var isExamType = _eventTypes.FirstOrDefault(t => t.Id == e.EventTypeId)?.Key == EventTypeConfig.ExamKey;
+        if (isExamType && e.LinkedExamId is null && ExamAssistantTemplate is not null)
+        {
+            _pendingExamEvent = e;
+            _examRequest = new ExamAssistantRequest(e.Title, e.Date);
+            _panel = Panel.ExamAssistant;
+            return;
+        }
+
+        _refreshToken++;
+        ClosePanel();
+    }
+
+    private async Task PersistAsync(CalendarEvent e)
+    {
         if (await Calendar.GetEventAsync(e.Id) is null)
         {
             await Calendar.CreateEventAsync(e);
@@ -91,7 +112,28 @@ public partial class CalendarComponent
         {
             await Calendar.UpdateEventAsync(e);
         }
+    }
 
+    /// <summary>Called by the host once the exam assistant has created an exam.</summary>
+    public async Task CompleteExamLinkAsync(Guid examId)
+    {
+        if (_pendingExamEvent is not null)
+        {
+            _pendingExamEvent.LinkedExamId = examId;
+            await Calendar.UpdateEventAsync(_pendingExamEvent);
+        }
+
+        _pendingExamEvent = null;
+        _examRequest = null;
+        _refreshToken++;
+        ClosePanel();
+    }
+
+    /// <summary>Called by the host if the user skips the exam assistant.</summary>
+    public void CancelExamLink()
+    {
+        _pendingExamEvent = null;
+        _examRequest = null;
         _refreshToken++;
         ClosePanel();
     }

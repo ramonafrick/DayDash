@@ -1,0 +1,28 @@
+.exam-detail h3 {
+    margin-top: 0;
+}
+
+.exam-detail dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--spacing-xs) var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
+}
+
+.exam-detail dt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.exam-detail dd {
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.confirm {
+    margin-top: var(--spacing-md);
+}

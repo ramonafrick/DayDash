@@ -1,0 +1,25 @@
+.subject-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-md);
+}
+
+.subject-table th {
+    text-align: left;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs);
+}
+
+.subject-table td {
+    padding: var(--spacing-xs);
+}
+
+.subject-table td:nth-child(2) input {
+    max-width: 6rem;
+}
+
+.row-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}

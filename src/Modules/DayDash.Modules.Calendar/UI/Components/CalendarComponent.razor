@@ -55,6 +55,12 @@
                                 OnSave="SaveAsync"
                                 OnCancel="ClosePanel" />
             break;
+
+        case Panel.ExamAssistant when _examRequest is not null && ExamAssistantTemplate is not null:
+            <div class="panel card">
+                @ExamAssistantTemplate(_examRequest)
+            </div>
+            break;
     }
 </div>
 

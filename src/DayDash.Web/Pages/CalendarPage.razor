@@ -1,7 +1,25 @@
 @page "/"
 @page "/calendar"
 @inject IStringLocalizer<DayDash.Modules.Settings.Resources.NavigationResources> Nav
+@inject NavigationManager NavManager
 
 <PageTitle>@Nav["Calendar"]</PageTitle>
 
-<CalendarComponent />
+<CalendarComponent @ref="_calendar" OnOpenLinkedExam="OpenExam">
+    <ExamAssistantTemplate>
+        <ExamAssistantComponent InitialTitle="context.Title"
+                                InitialDate="context.Date"
+                                OnExamCreated="CompleteLink"
+                                OnCancel="CancelLink" />
+    </ExamAssistantTemplate>
+</CalendarComponent>
+
+@code {
+    private CalendarComponent? _calendar;
+
+    private void OpenExam(Guid id) => NavManager.NavigateTo($"study/exams/{id}");
+
+    private Task CompleteLink(Guid id) => _calendar?.CompleteExamLinkAsync(id) ?? Task.CompletedTask;
+
+    private void CancelLink() => _calendar?.CancelExamLink();
+}

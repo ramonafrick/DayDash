@@ -1,0 +1,22 @@
+.exam-create h3 {
+    margin-top: 0;
+}
+
+.recommendation {
+    margin: var(--spacing-xs) 0 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.validation-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md);
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+}

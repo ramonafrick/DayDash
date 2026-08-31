@@ -1,4 +1,6 @@
+using System.Globalization;
 using DayDash.Migrations;
+using DayDash.Modules.Settings.Application.Services;
 using DayDash.Modules.Storage.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,12 @@ public sealed class SqliteDbContextFixture : IAsyncDisposable
 
     public SqliteDbContextFixture()
     {
+        // Seeders resolve default names via IStringLocalizer against CurrentUICulture; pin it so
+        // seeded data is deterministic regardless of the host machine's locale.
+        var culture = new CultureInfo(SupportedCultures.Default);
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
 

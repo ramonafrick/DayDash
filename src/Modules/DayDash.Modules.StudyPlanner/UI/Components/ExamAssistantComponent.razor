@@ -1,0 +1,65 @@
+@inherits CultureAwareComponentBase
+
+<div class="exam-assistant card">
+    <h3>@Loc["ExamAssistant"]</h3>
+
+    <ol class="steps">
+        <li class="@(_step == 1 ? "active" : "")">@Loc["StepSubject"]</li>
+        <li class="@(_step == 2 ? "active" : "")">@Loc["StepGoals"]</li>
+        <li class="@(_step == 3 ? "active" : "")">@Loc["StepMinutes"]</li>
+    </ol>
+
+    @if (_step == 1)
+    {
+        <div class="form-group">
+            <label for="a-title">@Loc["Title"]</label>
+            <input id="a-title" class="form-input" @bind="_title" @bind:event="oninput" />
+        </div>
+        <div class="form-group">
+            <label for="a-subject">@Loc["Subject"]</label>
+            <select id="a-subject" class="form-select" @bind="_subject">
+                <option value="">--</option>
+                @foreach (var s in _subjects)
+                {
+                    <option value="@s.Name">@s.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="a-date">@Loc["ExamDate"]</label>
+            <input id="a-date" type="date" class="form-input"
+                   value="@_date.ToString("yyyy-MM-dd")"
+                   @onchange="e => { if (DateOnly.TryParse(e.Value?.ToString(), out var d)) _date = d; }" />
+        </div>
+    }
+    else if (_step == 2)
+    {
+        <LearningGoalListComponent Goals="_goals" Editable="true" OnGoalsChanged="OnGoalsChangedAsync" />
+    }
+    else
+    {
+        <div class="form-group">
+            <label for="a-minutes">@Loc["TotalStudyMinutes"]</label>
+            <input id="a-minutes" type="number" min="0" class="form-input"
+                   value="@_totalMinutes"
+                   @onchange="e => { if (int.TryParse(e.Value?.ToString(), out var v)) _totalMinutes = v; }" />
+            <p class="hint">@Loc["Recommendation"]: @_recommended @Loc["Minutes"]</p>
+        </div>
+    }
+
+    <div class="actions">
+        @if (_step > 1)
+        {
+            <button class="btn btn-secondary" @onclick="Back">@Loc["Back"]</button>
+        }
+        @if (_step < 3)
+        {
+            <button class="btn btn-primary" disabled="@(_step == 1 && !CanAdvanceStep1)" @onclick="Next">@Loc["Next"]</button>
+        }
+        else
+        {
+            <button class="btn btn-primary" disabled="@_busy" @onclick="FinishAsync">@Loc["Finish"]</button>
+        }
+        <button class="btn btn-secondary" @onclick="OnCancel">@Loc["Cancel"]</button>
+    </div>
+</div>

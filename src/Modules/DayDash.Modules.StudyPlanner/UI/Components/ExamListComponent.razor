@@ -1,0 +1,35 @@
+@inherits CultureAwareComponentBase
+
+<div class="exam-list">
+    <div class="exam-list-header">
+        <h3>@Loc["ExamList"]</h3>
+        <button class="btn btn-primary" @onclick="StartCreate">@Loc["NewExam"]</button>
+    </div>
+
+    @if (_creating)
+    {
+        <ExamCreateComponent OnSaved="OnCreatedAsync" OnCancel="CancelCreate" />
+    }
+
+    @if (_exams.Count == 0)
+    {
+        <p>@Loc["NoExams"]</p>
+    }
+    else
+    {
+        <ul class="card">
+            @foreach (var exam in _exams)
+            {
+                <li @onclick="() => Open(exam)">
+                    <span class="exam-title">@exam.Title</span>
+                    <span class="exam-subject">@exam.Subject</span>
+                    <span class="exam-when">
+                        @exam.ExamDate.ToDateTime(TimeOnly.MinValue).ToString("d", CultureState.CurrentCulture)
+                        @{ var d = DaysRemaining(exam); }
+                        <span class="exam-days">@(d < 0 ? Loc["Overdue"] : d == 0 ? Loc["TodayLabel"] : d == 1 ? Loc["TomorrowLabel"] : $"{d} {Loc["Days"]}")</span>
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+</div>

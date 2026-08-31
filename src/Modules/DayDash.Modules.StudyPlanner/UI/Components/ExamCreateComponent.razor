@@ -1,35 +1,53 @@
+@inherits CultureAwareComponentBase
 
-<h3>@Loc["CreateExam"]</h3>
+<div class="exam-create card">
+    <h3>@(IsNew ? Loc["NewExam"] : Loc["EditExam"])</h3>
 
-<EditForm Model="_exam" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
 
-    <div>
-        <label>@Loc["Title"]</label>
-        <InputText @bind-Value="_exam.Title" />
-    </div>
+        <div class="form-group">
+            <label for="ex-title">@Loc["Title"]</label>
+            <InputText id="ex-title" class="form-input" @bind-Value="_model.Title" />
+        </div>
 
-    <div>
-        <label>@Loc["Subject"]</label>
-        <InputSelect @bind-Value="_exam.Subject">
-            @foreach (var subject in _subjects)
+        <div class="form-group">
+            <label for="ex-subject">@Loc["Subject"]</label>
+            <InputSelect id="ex-subject" class="form-select" @bind-Value="_model.Subject" @bind-Value:after="UpdateRecommendationAsync">
+                <option value="">--</option>
+                @foreach (var subject in _subjects)
+                {
+                    <option value="@subject.Name">@subject.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="ex-date">@Loc["ExamDate"]</label>
+            <InputDate id="ex-date" class="form-input" @bind-Value="_model.ExamDate" />
+        </div>
+
+        <div class="form-group">
+            <label>@Loc["LearningGoals"]</label>
+            <LearningGoalListComponent Goals="_goals" Editable="true" OnGoalsChanged="OnGoalsChangedAsync" />
+        </div>
+
+        <div class="form-group">
+            <label for="ex-minutes">@Loc["TotalStudyMinutes"]</label>
+            <InputNumber id="ex-minutes" class="form-input" @bind-Value="_model.TotalStudyMinutes" />
+            <p class="recommendation">@Loc["Recommendation"]: @_recommendedMinutes @Loc["Minutes"]</p>
+        </div>
+
+        <ul class="validation-errors">
+            @foreach (var message in context.GetValidationMessages())
             {
-                <option value="@subject.Name">@subject.Name</option>
+                <li>@Loc[message]</li>
             }
-        </InputSelect>
-    </div>
+        </ul>
 
-    <div>
-        <label>@Loc["ExamDate"]</label>
-        <InputDate @bind-Value="_exam.ExamDate" />
-    </div>
-
-    <div>
-        <label>@Loc["TotalStudyMinutes"]</label>
-        <InputNumber @bind-Value="_exam.TotalStudyMinutes" />
-        <span>@Loc["Recommendation"]: @_recommendedMinutes @Loc["Minutes"]</span>
-    </div>
-
-    <button type="submit">@Loc["Save"]</button>
-</EditForm>
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">@Loc["Save"]</button>
+            <button type="button" class="btn btn-secondary" @onclick="OnCancel">@Loc["Cancel"]</button>
+        </div>
+    </EditForm>
+</div>

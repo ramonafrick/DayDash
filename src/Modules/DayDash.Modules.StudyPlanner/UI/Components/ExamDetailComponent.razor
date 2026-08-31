@@ -1,24 +1,47 @@
+@inherits CultureAwareComponentBase
 
-<h3>@Loc["ExamDetails"]</h3>
+@if (_exam is null)
+{
+    <p>@Loc["NoExams"]</p>
+}
+else if (_editing)
+{
+    <ExamCreateComponent Exam="_exam" OnSaved="OnEditSavedAsync" OnCancel="CancelEdit" />
+}
+else
+{
+    <div class="exam-detail card">
+        <h3>@_exam.Title</h3>
+        <dl>
+            <dt>@Loc["Subject"]</dt>
+            <dd>@_exam.Subject</dd>
+            <dt>@Loc["ExamDate"]</dt>
+            <dd>@_exam.ExamDate.ToDateTime(TimeOnly.MinValue).ToString("d", CultureState.CurrentCulture)</dd>
+            <dt>@Loc["DaysRemaining"]</dt>
+            <dd>@(DaysRemaining < 0 ? Loc["Overdue"] : $"{DaysRemaining} {Loc["Days"]}")</dd>
+            <dt>@Loc["Recommendation"]</dt>
+            <dd>@_exam.RecommendedMinutes @Loc["Minutes"]</dd>
+            <dt>@Loc["MinutesToday"]</dt>
+            <dd>@_exam.DailyMinutes @Loc["Minutes"]</dd>
+        </dl>
 
-<div>
-    <p>@Loc["Title"]: @Exam.Title</p>
-    <p>@Loc["Subject"]: @Exam.Subject</p>
-    <p>@Loc["ExamDate"]: @Exam.ExamDate</p>
-    <p>@Loc["DaysRemaining"]: @DaysRemaining</p>
-    <p>@Loc["MinutesToday"]: @Exam.DailyMinutes</p>
-</div>
+        <h4>@Loc["LearningGoals"]</h4>
+        <LearningGoalListComponent Goals="_exam.LearningGoals" Editable="false" OnGoalToggled="ToggleGoalAsync" />
 
-<h4>@Loc["LearningGoals"]</h4>
-<ul>
-    @foreach (var goal in Exam.LearningGoals)
+        <div class="actions">
+            <button class="btn btn-primary" @onclick="StartEdit">@Loc["Edit"]</button>
+            <button class="btn btn-error" @onclick="() => _confirmingDelete = true">@Loc["Delete"]</button>
+        </div>
+    </div>
+
+    @if (_confirmingDelete)
     {
-        <li>
-            <input type="checkbox" @bind="goal.IsChecked" />
-            @goal.Text
-        </li>
+        <div class="confirm card">
+            <p>@Loc["ConfirmDeleteExam"]</p>
+            <div class="actions">
+                <button class="btn btn-error" @onclick="ConfirmDeleteAsync">@Loc["Delete"]</button>
+                <button class="btn btn-secondary" @onclick="() => _confirmingDelete = false">@Loc["Cancel"]</button>
+            </div>
+        </div>
     }
-</ul>
-
-<button @onclick="EditExam">@Loc["Edit"]</button>
-<button @onclick="DeleteExam">@Loc["Delete"]</button>
+}
