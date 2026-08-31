@@ -8,6 +8,9 @@ namespace DayDash.Modules.Reminder.Application.Contracts;
 /// </summary>
 public interface IReminderService
 {
+    /// <summary>False when the host can't deliver notifications (browser preview) - the UI shows a hint.</summary>
+    bool NotificationsSupported { get; }
+
     Task<ReminderConfig> GetConfigAsync(CancellationToken ct = default);
 
     /// <summary>Persists the config and re-computes the whole schedule.</summary>

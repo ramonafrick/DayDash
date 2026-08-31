@@ -17,14 +17,26 @@
 
     <div class="status-bar-safe-area"></div>
 
-    <div id="app">Loading...</div>
+    <div id="app">Laden…</div>
 
     <div id="blazor-error-ui" data-nosnippet>
-        <span class="reload-text"></span>
-        <a href="." class="reload">Reload</a>
+        <span class="reload-text">Ein Fehler ist aufgetreten.</span>
+        <a href="." class="reload">Neu laden</a>
         <span class="dismiss">🗙</span>
     </div>
 
+    <script>
+        // Static shell text can't use IStringLocalizer; swap to English when that's the stored culture.
+        (function () {
+            try {
+                if ((localStorage.getItem('BlazorCulture') || 'de-CH').toLowerCase().startsWith('en')) {
+                    document.querySelector('#app').textContent = 'Loading…';
+                    document.querySelector('#blazor-error-ui .reload-text').textContent = 'An error has occurred.';
+                    document.querySelector('#blazor-error-ui .reload').textContent = 'Reload';
+                }
+            } catch (e) { /* localStorage unavailable - keep the de-CH default */ }
+        })();
+    </script>
     <script src="_framework/blazor.webview.js" autostart="false"></script>
 
 </body>

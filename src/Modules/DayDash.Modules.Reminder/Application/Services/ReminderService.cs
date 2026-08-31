@@ -25,6 +25,8 @@ public sealed class ReminderService(
     /// <summary>Fallback time of day for an event with no start time.</summary>
     private static readonly TimeOnly DefaultEventTime = new(8, 0);
 
+    public bool NotificationsSupported => scheduler.IsSupported;
+
     public Task<ReminderConfig> GetConfigAsync(CancellationToken ct = default)
         => configRepository.GetAsync(ct);
 

@@ -18,4 +18,19 @@
     <ProjectReference Include="..\DayDash.Modules.StudyPlanner\DayDash.Modules.StudyPlanner.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ReminderResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ReminderResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ReminderResources.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <Compile Update="Resources\ReminderResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReminderResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

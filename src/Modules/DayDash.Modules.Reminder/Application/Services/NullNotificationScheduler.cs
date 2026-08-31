@@ -10,6 +10,8 @@ namespace DayDash.Modules.Reminder.Application.Services;
 /// </summary>
 public sealed class NullNotificationScheduler : INotificationScheduler
 {
+    public bool IsSupported => false;
+
     public Task ScheduleAsync(NotificationRequest request, CancellationToken ct = default) => Task.CompletedTask;
 
     public Task CancelAsync(int notificationId, CancellationToken ct = default) => Task.CompletedTask;

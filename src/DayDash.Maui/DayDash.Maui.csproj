@@ -28,7 +28,7 @@
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
 
         <!-- Display name -->
-        <ApplicationTitle>DayDash.Maui</ApplicationTitle>
+        <ApplicationTitle>DayDash</ApplicationTitle>
 
         <!-- App Identifier -->
         <ApplicationId>com.companyname.daydash.maui</ApplicationId>

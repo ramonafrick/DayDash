@@ -8,6 +8,9 @@ namespace DayDash.Modules.Reminder.Application.Contracts;
 /// </summary>
 public interface INotificationScheduler
 {
+    /// <summary>False on hosts that cannot deliver local notifications (the browser preview).</summary>
+    bool IsSupported { get; }
+
     Task ScheduleAsync(NotificationRequest request, CancellationToken ct = default);
 
     Task CancelAsync(int notificationId, CancellationToken ct = default);

@@ -17,6 +17,8 @@ public sealed class MauiNotificationScheduler(IStringLocalizer<ReminderResources
 
     private bool _channelReady;
 
+    public bool IsSupported => true;
+
     public async Task ScheduleAsync(AppNotificationRequest request, CancellationToken ct = default)
     {
         EnsureChannel();

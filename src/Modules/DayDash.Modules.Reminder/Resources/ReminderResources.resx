@@ -24,6 +24,9 @@
   <data name="Saved" xml:space="preserve">
     <value>Gespeichert.</value>
   </data>
+  <data name="NotificationsUnavailable" xml:space="preserve">
+    <value>Benachrichtigungen sind in der Browser-Vorschau nicht verfügbar.</value>
+  </data>
   <data name="NotificationChannelName" xml:space="preserve">
     <value>DayDash-Erinnerungen</value>
   </data>

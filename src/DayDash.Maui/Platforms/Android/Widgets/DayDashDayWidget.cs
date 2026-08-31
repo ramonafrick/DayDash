@@ -8,7 +8,7 @@ using DayDash.Modules.Widget.Resources;
 
 namespace DayDash.Maui;
 
-[BroadcastReceiver(Label = "DayDash Day Widget", Exported = false)]
+[BroadcastReceiver(Label = "@string/widget_day_label", Exported = false)]
 [IntentFilter(new[] { AppWidgetManager.ActionAppwidgetUpdate })]
 [MetaData(AppWidgetManager.MetaDataAppwidgetProvider, Resource = "@xml/daydash_day_widget_info")]
 public class DayDashDayWidget : AppWidgetProvider

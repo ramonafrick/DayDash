@@ -5,6 +5,11 @@
 <div class="reminder-settings card">
     <h3>@Loc["ReminderSettings"]</h3>
 
+    @if (!ReminderService.NotificationsSupported)
+    {
+        <p class="hint">@Loc["NotificationsUnavailable"]</p>
+    }
+
     <div class="form-group">
         <label class="checkbox">
             <input type="checkbox" @bind="_enabled" />

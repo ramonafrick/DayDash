@@ -41,35 +41,52 @@ dotnet restore src/DayDash.slnx
 dotnet clean src/DayDash.slnx
 ```
 
-### EF Core Migrations (run from src/)
+### EF Core Migrations (run from repo root)
+Migrations live in the dedicated `DayDash.Migrations` project (it references Storage +
+every entity-owning module and holds the design-time factory). `dotnet-ef` is a local
+tool - run `dotnet tool restore` once first.
 ```bash
-dotnet ef migrations add {MigrationName} --project Modules/DayDash.Modules.Storage
-dotnet ef database update --project Modules/DayDash.Modules.Storage
+dotnet tool restore
+dotnet ef migrations add {MigrationName} --project src/DayDash.Migrations --startup-project src/DayDash.Migrations --output-dir Migrations
+dotnet ef database update          --project src/DayDash.Migrations --startup-project src/DayDash.Migrations
+dotnet ef migrations list          --project src/DayDash.Migrations --startup-project src/DayDash.Migrations
 ```
+On device / in the app the database is created and migrated automatically at startup by
+`IDatabaseInitializer` (Migrate for SQLite, EnsureCreated for the Web in-memory preview).
 
 ---
 
 ## Project Structure
 
 ```
+Directory.Build.props            # shared MSBuild props (de-CH NeutralResourcesLanguage, nullable, ...)
+Directory.Packages.props         # Central Package Management - all versions pinned here
+global.json                      # SDK pin
+.config/dotnet-tools.json        # dotnet-ef local tool
 src/
 ├── DayDash.slnx
-├── DayDash.Maui/               # MAUI Host (Blazor Hybrid, Android)
-│   ├── Components/             # Shared Blazor layout components
-│   ├── Pages/                  # XAML pages (shell navigation)
-│   ├── Platforms/Android/      # Android-specific code (widget, notifications)
+├── DayDash.Maui/               # MAUI Host (Blazor Hybrid, Android-only)
+│   ├── Components/             # Routes.razor (Blazor <Router>) + thin @page wrappers
+│   ├── Platforms/Android/      # AndroidManifest, widgets, BootReceiver, MlKit bridge
 │   ├── Services/               # MAUI implementations of module interfaces
-│   ├── wwwroot/                # Static web assets
+│   ├── wwwroot/                # index.html + static assets
 │   └── MauiProgram.cs          # App entry point, DI registration
-├── DayDash.Web/                # Blazor WASM (browser preview)
+├── DayDash.Web/                # Blazor WebAssembly (browser preview of the same components)
+├── DayDash.Migrations/         # EF Core migrations + design-time factory (references Storage + feature modules)
 └── Modules/
+    ├── DayDash.Modules.Settings/       # culture switching + shared shell (MainLayout/NavMenu/ThemeToggle, global CSS)
+    ├── DayDash.Modules.Storage/        # EF Core DbContext (provider-agnostic), repositories, data-change bus
     ├── DayDash.Modules.Calendar/
     ├── DayDash.Modules.Camera/
     ├── DayDash.Modules.StudyPlanner/
     ├── DayDash.Modules.Reminder/
-    ├── DayDash.Modules.Widget/
-    └── DayDash.Modules.Storage/
+    └── DayDash.Modules.Widget/
+tests/
+└── DayDash.Tests/              # xUnit (logic) + bUnit (components), SQLite :memory: + EF InMemory fixtures
 ```
+
+There is no `AppShell` / per-feature XAML page: the MAUI host is a single `BlazorWebView`
+rendering the shared Blazor router, so the same Razor components run in both hosts.
 
 ---
 

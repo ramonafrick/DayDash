@@ -6,6 +6,8 @@
 
 namespace DayDash.Modules.Calendar.Resources;
 
+#nullable enable
+
 using System.Globalization;
 using System.Resources;
 

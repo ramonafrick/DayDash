@@ -37,6 +37,8 @@ public sealed class ReminderHost
 
 public sealed class FakeReminderService : IReminderService
 {
+    public bool NotificationsSupported { get; set; } = true;
+
     public ReminderConfig Config { get; set; } = new();
 
     public ReminderConfig? LastSaved { get; private set; }
@@ -83,6 +85,8 @@ public sealed class FakeReminderConfigRepository : IReminderConfigRepository
 
 public sealed class RecordingNotificationScheduler : INotificationScheduler
 {
+    public bool IsSupported => true;
+
     public List<NotificationRequest> Scheduled { get; } = [];
 
     public List<int> Cancelled { get; } = [];

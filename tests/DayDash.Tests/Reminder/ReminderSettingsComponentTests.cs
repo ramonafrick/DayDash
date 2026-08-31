@@ -36,6 +36,17 @@ public class ReminderSettingsComponentTests : CultureIsolatedTest
     }
 
     [Fact]
+    public void Shows_a_hint_when_the_host_cannot_deliver_notifications()
+    {
+        using var ctx = NewContext(out var reminders);
+        reminders.NotificationsSupported = false;
+
+        var cut = ctx.RenderComponent<ReminderSettingsComponent>();
+
+        Assert.Contains("Browser-Vorschau", cut.Markup);
+    }
+
+    [Fact]
     public void Saving_sends_the_edited_values_once_and_confirms()
     {
         using var ctx = NewContext(out var reminders);

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_day_label">DayDash – Today</string>
+    <string name="widget_week_label">DayDash – Week</string>
+    <string name="widget_month_label">DayDash – Month</string>
+</resources>

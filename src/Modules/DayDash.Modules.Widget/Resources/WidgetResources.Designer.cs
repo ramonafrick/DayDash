@@ -8,6 +8,8 @@
 
 namespace DayDash.Modules.Widget.Resources;
 
+#nullable enable
+
 using System.Globalization;
 using System.Resources;
 

@@ -17,4 +17,19 @@
     <ProjectReference Include="..\DayDash.Modules.StudyPlanner\DayDash.Modules.StudyPlanner.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\CameraResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CameraResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\CameraResources.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <Compile Update="Resources\CameraResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CameraResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

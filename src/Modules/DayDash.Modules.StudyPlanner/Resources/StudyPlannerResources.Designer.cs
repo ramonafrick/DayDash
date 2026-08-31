@@ -6,6 +6,8 @@
 
 namespace DayDash.Modules.StudyPlanner.Resources;
 
+#nullable enable
+
 using System.Globalization;
 using System.Resources;
 
