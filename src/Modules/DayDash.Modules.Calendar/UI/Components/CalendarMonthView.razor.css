@@ -1,44 +1,78 @@
-.calendar-month-view {
-    display: flex;
-    flex-direction: column;
-}
-
 .navigation {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.month-label {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-lg);
+    text-transform: capitalize;
+}
+
+.weekday-headers,
+.week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.weekday-header {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) 0;
 }
 
 .month-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-}
-
-.week-row {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
 }
 
 .day-cell {
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    text-align: center;
-    position: relative;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-xs);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.day-cell:hover {
+    background: var(--color-bg-secondary);
+}
+
+.day-cell.other-month {
+    color: var(--color-text-light);
+    background: var(--color-bg-secondary);
 }
 
 .day-cell.today {
-    background-color: #ffeb3b;
+    border-color: var(--color-primary);
+    border-width: 2px;
+    font-weight: var(--font-weight-semibold);
+}
+
+.day-number {
+    font-size: var(--font-size-sm);
 }
 
 .event-dots {
     display: flex;
-    justify-content: center;
-    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: auto;
 }
 
 .event-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    margin: 0 0.1rem;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
 }

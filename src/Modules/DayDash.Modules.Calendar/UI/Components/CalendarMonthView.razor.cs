@@ -1,60 +1,74 @@
-using System;
-using System.Collections.Generic;
+using DayDash.Modules.Calendar.Application.Contracts;
+using DayDash.Modules.Calendar.Application.Models;
+using DayDash.Modules.Calendar.Application.Services;
+using DayDash.Modules.Calendar.Resources;
+using DayDash.Modules.Settings.UI;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using DayDash.Modules.Calendar.Domain;
-using DayDash.Modules.Calendar.Resources;
 
 namespace DayDash.Modules.Calendar.UI.Components;
 
 public partial class CalendarMonthView
 {
+    private const DayOfWeek FirstDayOfWeek = DayOfWeek.Monday;
+
     [Inject] private IStringLocalizer<CalendarResources> Loc { get; set; } = default!;
+    [Inject] private ICalendarService Calendar { get; set; } = default!;
+    [Inject] private TimeProvider Time { get; set; } = default!;
 
-    private DateTime CurrentMonth { get; set; } = DateTime.Today;
-    private List<List<DayViewModel>> MonthGrid { get; set; } = new();
+    /// <summary>Raised when the child wants the shell to show a day's events.</summary>
+    [Parameter] public EventCallback<DateOnly> OnDaySelected { get; set; }
 
-    protected override void OnInitialized()
+    /// <summary>Bumped by the parent after a write so the grid reloads.</summary>
+    [Parameter] public int RefreshToken { get; set; }
+
+    private DateOnly _month;
+    private IReadOnlyList<CalendarWeek> _weeks = [];
+    private int _lastRefreshToken;
+
+    private DateOnly Today => DateOnly.FromDateTime(Time.GetLocalNow().Date);
+
+    protected override async Task OnInitializedAsync()
     {
-        BuildMonthGrid();
+        _month = new DateOnly(Today.Year, Today.Month, 1);
+        await ReloadAsync();
     }
 
-    private void BuildMonthGrid()
+    protected override async Task OnParametersSetAsync()
     {
-        // Logic to build the month grid with weeks and days
-    }
-
-    private void PreviousMonth()
-    {
-        CurrentMonth = CurrentMonth.AddMonths(-1);
-        BuildMonthGrid();
-    }
-
-    private void NextMonth()
-    {
-        CurrentMonth = CurrentMonth.AddMonths(1);
-        BuildMonthGrid();
-    }
-
-    private void SelectDay(DateTime date)
-    {
-        // Logic to handle day selection
-    }
-
-    private void ShowEventDetails(DateTime date)
-    {
-        var events = MonthGrid.SelectMany(week => week)
-                          .FirstOrDefault(day => day.Date == date)?.EventTypes;
-        if (events != null && events.Any())
+        if (RefreshToken != _lastRefreshToken)
         {
-            // Logic to display event details (e.g., open a modal or navigate to a detail page)
+            _lastRefreshToken = RefreshToken;
+            await ReloadAsync();
         }
     }
 
-    private class DayViewModel
+    private async Task ReloadAsync()
     {
-        public DateTime Date { get; set; }
-        public bool IsToday => Date.Date == DateTime.Today;
-        public List<EventTypeConfig> EventTypes { get; set; } = new();
+        var events = await Calendar.GetEventsForMonthAsync(_month.Year, _month.Month);
+        var types = await Calendar.GetEventTypesAsync();
+        _weeks = CalendarGridBuilder.Build(_month.Year, _month.Month, FirstDayOfWeek, Today, events, types);
     }
+
+    private async Task PreviousMonthAsync()
+    {
+        _month = _month.AddMonths(-1);
+        await ReloadAsync();
+    }
+
+    private async Task NextMonthAsync()
+    {
+        _month = _month.AddMonths(1);
+        await ReloadAsync();
+    }
+
+    private Task SelectDayAsync(DateOnly date) => OnDaySelected.InvokeAsync(date);
+
+    private string MonthLabel => _month.ToDateTime(TimeOnly.MinValue).ToString("MMMM yyyy", CultureState.CurrentCulture);
+
+    private IReadOnlyList<string> WeekdayHeaders =>
+    [
+        Loc["Weekday_Mon"], Loc["Weekday_Tue"], Loc["Weekday_Wed"], Loc["Weekday_Thu"],
+        Loc["Weekday_Fri"], Loc["Weekday_Sat"], Loc["Weekday_Sun"],
+    ];
 }

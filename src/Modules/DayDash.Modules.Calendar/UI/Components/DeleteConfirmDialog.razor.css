@@ -1,0 +1,24 @@
+.dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.dialog {
+    max-width: 340px;
+    width: calc(100% - 2rem);
+}
+
+.dialog h3 {
+    margin-top: 0;
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+}

@@ -1,0 +1,76 @@
+@inherits CultureAwareComponentBase
+<div class="event-edit card">
+    <h3>@(IsNew ? Loc["NewEvent"] : Loc["EditEvent"])</h3>
+
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label for="ev-title">@Loc["EventTitle"]</label>
+            <InputText id="ev-title" class="form-input" @bind-Value="_model.Title" />
+        </div>
+
+        <div class="form-group">
+            <label for="ev-type">@Loc["EventType"]</label>
+            <InputSelect id="ev-type" class="form-select" @bind-Value="_model.EventTypeId">
+                <option value="">@Loc["NoType"]</option>
+                @foreach (var type in EventTypes)
+                {
+                    <option value="@type.Id">@type.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="ev-date">@Loc["Date"]</label>
+            <InputDate id="ev-date" class="form-input" @bind-Value="_model.Date" />
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox">
+                <InputCheckbox @bind-Value="_model.IsAllDay" />
+                @Loc["AllDay"]
+            </label>
+        </div>
+
+        @if (!_model.IsAllDay)
+        {
+            <div class="time-row">
+                <div class="form-group">
+                    <label for="ev-from">@Loc["TimeFrom"]</label>
+                    <input id="ev-from" type="time" class="form-input"
+                           value="@_model.TimeFrom?.ToString("HH:mm")"
+                           @onchange="e => _model.TimeFrom = ParseTime(e.Value?.ToString())" />
+                </div>
+                <div class="form-group">
+                    <label for="ev-to">@Loc["TimeTo"]</label>
+                    <input id="ev-to" type="time" class="form-input"
+                           value="@_model.TimeTo?.ToString("HH:mm")"
+                           @onchange="e => _model.TimeTo = ParseTime(e.Value?.ToString())" />
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            <label for="ev-notes">@Loc["Notes"]</label>
+            <InputTextArea id="ev-notes" class="form-input" @bind-Value="_model.Notes" />
+        </div>
+
+        <ul class="validation-errors">
+            @foreach (var message in context.GetValidationMessages())
+            {
+                <li>@Loc[message]</li>
+            }
+        </ul>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">@Loc["Save"]</button>
+            <button type="button" class="btn btn-secondary" @onclick="OnCancel">@Loc["Cancel"]</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private static TimeOnly? ParseTime(string? value)
+        => TimeOnly.TryParse(value, out var t) ? t : null;
+}

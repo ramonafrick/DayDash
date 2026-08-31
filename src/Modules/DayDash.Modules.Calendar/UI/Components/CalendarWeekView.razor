@@ -1,21 +1,39 @@
+@inherits CultureAwareComponentBase
 <div class="calendar-week-view">
     <div class="navigation">
-        <button @onclick="PreviousWeek">@Loc["Previous"]</button>
-        <span>@CurrentWeekStart.ToString("dd MMM yyyy") - @CurrentWeekEnd.ToString("dd MMM yyyy")</span>
-        <button @onclick="NextWeek">@Loc["Next"]</button>
+        <button class="btn btn-secondary" @onclick="PreviousWeekAsync">@Loc["Previous"]</button>
+        <span class="week-label">@RangeLabel</span>
+        <button class="btn btn-secondary" @onclick="NextWeekAsync">@Loc["Next"]</button>
     </div>
 
     <div class="week-grid">
-        @foreach (var day in WeekDays)
+        @foreach (var day in _days)
         {
-            <div class="day-column">
-                <h4>@day.Date.ToString("dddd")</h4>
-                <ul>
-                    @foreach (var calendarEvent in day.Events)
-                    {
-                        <li @onclick="(() => ShowEventDetails(calendarEvent))">@calendarEvent.Title</li>
-                    }
-                </ul>
+            <div class="day-column @(day.Date == Today ? "today" : "")">
+                <h4>@DayLabel(day.Date)</h4>
+                @if (day.Events.Count == 0)
+                {
+                    <p class="empty">@Loc["NoEvents"]</p>
+                }
+                else
+                {
+                    <ul>
+                        @foreach (var e in day.Events)
+                        {
+                            <li @onclick="() => OnEventSelected.InvokeAsync(e)">
+                                @if (e.EventType is not null)
+                                {
+                                    <span class="event-dot" style="background-color:@e.EventType.Color"></span>
+                                }
+                                <span class="event-title">@e.Title</span>
+                                @if (!e.IsAllDay && e.TimeFrom is { } from)
+                                {
+                                    <span class="event-time">@from.ToString("HH:mm")</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
         }
     </div>

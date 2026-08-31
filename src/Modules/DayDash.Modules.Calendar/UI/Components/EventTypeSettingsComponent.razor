@@ -1,0 +1,56 @@
+@inherits CultureAwareComponentBase
+<div class="event-type-settings container">
+    <h1 class="page-title">@Loc["EventTypeSettings"]</h1>
+
+    <div class="card">
+        <table class="type-table">
+            <thead>
+                <tr>
+                    <th>@Loc["Color"]</th>
+                    <th>@Loc["Name"]</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var type in _types)
+                {
+                    <tr>
+                        <td>
+                            <input type="color" value="@type.Color"
+                                   @onchange="e => { type.Color = e.Value?.ToString() ?? type.Color; }" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-input" value="@type.Name"
+                                   @onchange="e => { type.Name = e.Value?.ToString() ?? type.Name; }" />
+                        </td>
+                        <td>
+                            @if (type.IsDefault)
+                            {
+                                <span class="badge">@Loc["IsDefaultType"]</span>
+                            }
+                        </td>
+                        <td class="row-actions">
+                            <button class="btn btn-secondary" @onclick="() => SaveAsync(type)">@Loc["Save"]</button>
+                            <button class="btn btn-error" @onclick="() => RequestDelete(type)">@Loc["Delete"]</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card add-row">
+        <h3>@Loc["NewEventType"]</h3>
+        <div class="add-fields">
+            <input type="color" @bind="_newColor" />
+            <input type="text" class="form-input" placeholder="@Loc["Name"]" @bind="_newName" />
+            <button class="btn btn-primary" @onclick="AddAsync">@Loc["NewEventType"]</button>
+        </div>
+    </div>
+</div>
+
+<DeleteConfirmDialog Visible="_pendingDelete is not null"
+                     Message="@Loc["EventTypeInUse"]"
+                     OnConfirm="ConfirmDeleteAsync"
+                     OnCancel="CancelDelete" />

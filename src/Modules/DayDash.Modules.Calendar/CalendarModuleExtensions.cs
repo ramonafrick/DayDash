@@ -14,6 +14,7 @@ public static class CalendarModuleExtensions
     {
         services.AddSingleton<IModelConfiguration, CalendarModelConfiguration>();
         services.AddScoped<IDataSeeder, EventTypeSeeder>();
+        services.AddScoped<IDataChangeHandler, CalendarExamLinkHandler>();
 
         services.AddScoped<ICalendarRepository, CalendarRepository>();
         services.AddScoped<ICalendarService, CalendarService>();

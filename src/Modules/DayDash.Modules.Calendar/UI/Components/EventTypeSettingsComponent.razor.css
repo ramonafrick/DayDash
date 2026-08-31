@@ -1,0 +1,47 @@
+.type-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.type-table th {
+    text-align: left;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs);
+}
+
+.type-table td {
+    padding: var(--spacing-xs);
+    vertical-align: middle;
+}
+
+.row-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.badge {
+    font-size: var(--font-size-xs);
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
+    padding: 2px var(--spacing-sm);
+    color: var(--color-text-secondary);
+}
+
+.add-row {
+    margin-top: var(--spacing-lg);
+}
+
+.add-row h3 {
+    margin-top: 0;
+}
+
+.add-fields {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.add-fields input[type="text"] {
+    flex: 1;
+}

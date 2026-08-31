@@ -1,3 +1,4 @@
+using System.Globalization;
 using Bunit;
 using DayDash.Modules.Settings.Application.Contracts;
 using DayDash.Modules.Settings.Application.Services;
@@ -19,6 +20,12 @@ public class DayDashTestContext : TestContext
 
     public DayDashTestContext()
     {
+        // Component tests assert against the neutral (de-CH) resources; pin the culture so the
+        // outcome does not depend on the host machine's locale. CultureIsolatedTest restores it.
+        var culture = new CultureInfo(SupportedCultures.Default);
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+
         Services.AddLocalization();
         Services.AddLogging();
         Services.AddSingleton<CultureStateService>();

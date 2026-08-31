@@ -1,0 +1,23 @@
+.calendar-component {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.calendar-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-view-switch,
+.calendar-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.panel h3 {
+    margin-top: 0;
+}

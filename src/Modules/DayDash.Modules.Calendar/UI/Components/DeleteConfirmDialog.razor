@@ -1,0 +1,22 @@
+@inject IStringLocalizer<CalendarResources> Loc
+
+@if (Visible)
+{
+    <div class="dialog-backdrop" @onclick="OnCancel">
+        <div class="dialog card" @onclick:stopPropagation="true">
+            <h3>@Loc["ConfirmDeleteTitle"]</h3>
+            <p>@Message</p>
+            <div class="actions">
+                <button class="btn btn-error" @onclick="OnConfirm">@Loc["Yes"]</button>
+                <button class="btn btn-secondary" @onclick="OnCancel">@Loc["No"]</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+}

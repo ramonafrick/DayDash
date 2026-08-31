@@ -1,0 +1,32 @@
+.event-edit h3 {
+    margin-top: 0;
+}
+
+.time-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.time-row .form-group {
+    flex: 1;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: var(--font-weight-normal);
+}
+
+.validation-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md);
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+}

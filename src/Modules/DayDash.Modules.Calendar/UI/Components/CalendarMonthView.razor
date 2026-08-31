@@ -1,25 +1,35 @@
+@inherits CultureAwareComponentBase
 <div class="calendar-month-view">
     <div class="navigation">
-        <button @onclick="PreviousMonth">@Loc["Previous"]</button>
-        <span>@CurrentMonth.ToString("MMMM yyyy")</span>
-        <button @onclick="NextMonth">@Loc["Next"]</button>
+        <button class="btn btn-secondary" @onclick="PreviousMonthAsync">@Loc["Previous"]</button>
+        <span class="month-label">@MonthLabel</span>
+        <button class="btn btn-secondary" @onclick="NextMonthAsync">@Loc["Next"]</button>
+    </div>
+
+    <div class="weekday-headers">
+        @foreach (var header in WeekdayHeaders)
+        {
+            <div class="weekday-header">@header</div>
+        }
     </div>
 
     <div class="month-grid">
-        @foreach (var week in MonthGrid)
+        @foreach (var week in _weeks)
         {
             <div class="week-row">
-                @foreach (var day in week)
+                @foreach (var day in week.Days)
                 {
-                    <div class="day-cell @(day.IsToday ? "today" : "")" @onclick="(() => ShowEventDetails(day.Date))">
-                        <span>@day.Date.Day</span>
+                    <button type="button"
+                            class="day-cell @(day.IsCurrentMonth ? "" : "other-month") @(day.IsToday ? "today" : "")"
+                            @onclick="() => SelectDayAsync(day.Date)">
+                        <span class="day-number">@day.Date.Day</span>
                         <div class="event-dots">
-                            @foreach (var eventType in day.EventTypes)
+                            @foreach (var color in day.DotColors)
                             {
-                                <span class="event-dot" style="background-color: @eventType.Color"></span>
+                                <span class="event-dot" style="background-color:@color"></span>
                             }
                         </div>
-                    </div>
+                    </button>
                 }
             </div>
         }

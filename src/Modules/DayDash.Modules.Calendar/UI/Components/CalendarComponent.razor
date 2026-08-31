@@ -1,21 +1,64 @@
-@inject IStringLocalizer<CalendarResources> Loc
-
+@inherits CultureAwareComponentBase
 <div class="calendar-component">
-    <div class="calendar-view-switch">
-        <button class="@(_showWeek ? "" : "active")" @onclick="() => _showWeek = false">@Loc["MonthView"]</button>
-        <button class="@(_showWeek ? "active" : "")" @onclick="() => _showWeek = true">@Loc["WeekView"]</button>
+    <div class="calendar-toolbar">
+        <div class="calendar-view-switch">
+            <button class="btn @(_showWeek ? "btn-secondary" : "btn-primary")" @onclick="ShowMonth">@Loc["MonthView"]</button>
+            <button class="btn @(_showWeek ? "btn-primary" : "btn-secondary")" @onclick="ShowWeek">@Loc["WeekView"]</button>
+        </div>
+        <div class="calendar-actions">
+            <button class="btn btn-primary" @onclick="StartCreateAsync">@Loc["NewEvent"]</button>
+            <button class="btn btn-secondary" @onclick="ExportAsync">@Loc["ExportIcs"]</button>
+        </div>
     </div>
+
+    @if (_toast is not null)
+    {
+        <div class="alert alert-info" role="status">@_toast</div>
+    }
 
     @if (_showWeek)
     {
-        <CalendarWeekView />
+        <CalendarWeekView RefreshToken="_refreshToken" OnEventSelected="OnEventSelected" />
     }
     else
     {
-        <CalendarMonthView />
+        <CalendarMonthView RefreshToken="_refreshToken" OnDaySelected="OnDaySelectedAsync" />
+    }
+
+    @switch (_panel)
+    {
+        case Panel.DayList:
+            <div class="panel card">
+                <h3>@_selectedDay.ToDateTime(TimeOnly.MinValue).ToString("d", CultureState.CurrentCulture)</h3>
+                @if (_dayEvents.Count == 0)
+                {
+                    <p>@Loc["NoEvents"]</p>
+                }
+                else
+                {
+                    <EventListComponent Events="_dayEvents.ToList()" OnEventSelected="OnEventSelected" />
+                }
+                <button class="btn btn-secondary" @onclick="ClosePanel">@Loc["Cancel"]</button>
+            </div>
+            break;
+
+        case Panel.Detail when _selectedEvent is not null:
+            <EventDetailComponent Event="_selectedEvent"
+                                  OnEdit="StartEditAsync"
+                                  OnDelete="RequestDelete"
+                                  OnOpenLinkedExam="OnOpenLinkedExam" />
+            break;
+
+        case Panel.Edit:
+            <EventEditComponent Event="_editEvent"
+                                EventTypes="_eventTypes"
+                                OnSave="SaveAsync"
+                                OnCancel="ClosePanel" />
+            break;
     }
 </div>
 
-@code {
-    private bool _showWeek;
-}
+<DeleteConfirmDialog Visible="_pendingDelete is not null"
+                     Message="@Loc["ConfirmDeleteEvent"]"
+                     OnConfirm="ConfirmDeleteAsync"
+                     OnCancel="CancelDelete" />

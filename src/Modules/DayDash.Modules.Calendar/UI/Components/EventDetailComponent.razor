@@ -1,12 +1,35 @@
-<div class="event-detail">
-    <h2>@Event.Title</h2>
-    <p>@Loc["Date"]: @Event.Date.ToString("dd MMM yyyy")</p>
-    @if (!Event.IsAllDay)
-    {
-        <p>@Loc["Time"]: @Event.TimeFrom?.ToString("HH:mm") - @Event.TimeTo?.ToString("HH:mm")</p>
-    }
-    <p>@Loc["Notes"]: @Event.Notes</p>
+@inherits CultureAwareComponentBase
+<div class="event-detail card">
+    <div class="title-row">
+        @if (Event.EventType is not null)
+        {
+            <span class="event-dot" style="background-color:@Event.EventType.Color"></span>
+        }
+        <h2>@Event.Title</h2>
+    </div>
 
-    <button @onclick="(() => OnEdit.InvokeAsync(Event))">@Loc["Edit"]</button>
-    <button @onclick="(() => OnDelete.InvokeAsync(Event))">@Loc["Delete"]</button>
+    <p>@Loc["Date"]: @Event.Date.ToDateTime(TimeOnly.MinValue).ToString("d", CultureState.CurrentCulture)</p>
+
+    @if (Event.IsAllDay)
+    {
+        <p>@Loc["AllDay"]</p>
+    }
+    else if (Event.TimeFrom is { } from)
+    {
+        <p>@Loc["Time"]: @from.ToString("HH:mm")@(Event.TimeTo is { } to ? $" – {to:HH\\:mm}" : "")</p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Event.Notes))
+    {
+        <p>@Loc["Notes"]: @Event.Notes</p>
+    }
+
+    <div class="actions">
+        @if (Event.LinkedExamId is { } examId)
+        {
+            <button class="btn btn-secondary" @onclick="() => OnOpenLinkedExam.InvokeAsync(examId)">@Loc["OpenLinkedExam"]</button>
+        }
+        <button class="btn btn-primary" @onclick="() => OnEdit.InvokeAsync(Event)">@Loc["Edit"]</button>
+        <button class="btn btn-error" @onclick="() => OnDelete.InvokeAsync(Event)">@Loc["Delete"]</button>
+    </div>
 </div>
