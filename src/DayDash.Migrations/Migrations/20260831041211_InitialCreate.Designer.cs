@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DayDash.Migrations.Migrations
 {
     [DbContext(typeof(DayDashDbContext))]
-    [Migration("20260831035638_InitialCreate")]
+    [Migration("20260831041211_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -186,9 +186,7 @@ namespace DayDash.Migrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MinutesPerGoal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(15);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()

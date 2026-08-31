@@ -12,6 +12,11 @@ public class CalendarRepository(DayDashDbContext context) : BaseRepository<Calen
 
     public async Task<IReadOnlyList<CalendarEvent>> GetByMonthAsync(int year, int month, CancellationToken ct = default)
     {
+        if (month is < 1 or > 12)
+        {
+            return [];
+        }
+
         // Half-open range instead of e.Date.Year/.Month so it translates on any provider (AD-2).
         var first = new DateOnly(year, month, 1);
         var next = first.AddMonths(1);

@@ -23,7 +23,9 @@ public class StudyPlannerService(
     public async Task<IReadOnlyList<Exam>> GetTodayStudyPlanAsync(CancellationToken ct = default)
     {
         var today = DateOnly.FromDateTime(timeProvider.GetLocalNow().Date);
-        var exams = await examRepository.GetUpcomingAsync(30, ct);
+        // Wide window so long-lead exams with a computed daily split still appear.
+        // TODO(Slice 3): query "all open exams with DailyMinutes > 0" directly.
+        var exams = await examRepository.GetUpcomingAsync(365, ct);
         return exams.Where(e => e.DailyMinutes > 0 && e.ExamDate >= today).ToList();
     }
 

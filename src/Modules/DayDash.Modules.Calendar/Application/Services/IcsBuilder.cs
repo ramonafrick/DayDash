@@ -10,9 +10,12 @@ namespace DayDash.Modules.Calendar.Application.Services;
 public static class IcsBuilder
 {
     private const string Crlf = "\r\n";
+    private const int MaxOctets = 75;
 
-    public static string Build(IEnumerable<CalendarEvent> events)
+    public static string Build(IEnumerable<CalendarEvent> events, DateTimeOffset generatedAt)
     {
+        var stamp = generatedAt.UtcDateTime.ToString("yyyyMMddTHHmmssZ");
+
         var sb = new StringBuilder();
         AppendLine(sb, "BEGIN:VCALENDAR");
         AppendLine(sb, "VERSION:2.0");
@@ -23,6 +26,7 @@ public static class IcsBuilder
         {
             AppendLine(sb, "BEGIN:VEVENT");
             AppendLine(sb, $"UID:{e.Id:D}@daydash");
+            AppendLine(sb, $"DTSTAMP:{stamp}");
 
             if (e.IsAllDay)
             {
@@ -59,24 +63,60 @@ public static class IcsBuilder
         .Replace("\n", "\\n")
         .Replace("\r", "\\n");
 
-    /// <summary>Appends a content line, folding at 75 octets per RFC 5545 §3.1.</summary>
+    /// <summary>
+    /// Appends a content line, folding at 75 <em>octets</em> (UTF-8) per RFC 5545 §3.1 without
+    /// splitting a multi-byte character across the fold.
+    /// </summary>
     private static void AppendLine(StringBuilder sb, string line)
     {
-        const int max = 75;
-        if (line.Length <= max)
+        var first = true;
+        var index = 0;
+        while (index < line.Length)
         {
-            sb.Append(line).Append(Crlf);
-            return;
+            // A continuation line starts with a single space that also counts toward the limit.
+            var budget = first ? MaxOctets : MaxOctets - 1;
+            var take = 0;
+            var octets = 0;
+            while (index + take < line.Length)
+            {
+                var runeLen = char.IsHighSurrogate(line[index + take]) ? 2 : 1;
+                var rune = char.ConvertToUtf32(line.Substring(index + take, runeLen), 0);
+                var runeOctets = Utf8Length(rune);
+                if (octets + runeOctets > budget)
+                {
+                    break;
+                }
+
+                octets += runeOctets;
+                take += runeLen;
+            }
+
+            if (take == 0)
+            {
+                take = Math.Min(line.Length - index, 1); // guard against a rune wider than the budget
+            }
+
+            if (!first)
+            {
+                sb.Append(' ');
+            }
+
+            sb.Append(line, index, take).Append(Crlf);
+            index += take;
+            first = false;
         }
 
-        sb.Append(line[..max]).Append(Crlf);
-        var rest = line[max..];
-        while (rest.Length > max - 1)
+        if (first)
         {
-            sb.Append(' ').Append(rest[..(max - 1)]).Append(Crlf);
-            rest = rest[(max - 1)..];
+            sb.Append(Crlf); // empty line
         }
-
-        sb.Append(' ').Append(rest).Append(Crlf);
     }
+
+    private static int Utf8Length(int codePoint) => codePoint switch
+    {
+        <= 0x7F => 1,
+        <= 0x7FF => 2,
+        <= 0xFFFF => 3,
+        _ => 4,
+    };
 }

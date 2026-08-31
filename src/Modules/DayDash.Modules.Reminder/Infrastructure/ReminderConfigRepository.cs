@@ -12,11 +12,16 @@ public sealed class ReminderConfigRepository(DayDashDbContext context) : IRemind
 
     public async Task SaveAsync(ReminderConfig config, CancellationToken ct = default)
     {
-        config.Id = ReminderConfig.SingletonId;
-        var existing = await context.Set<ReminderConfig>().FindAsync([config.Id], ct);
+        var existing = await context.Set<ReminderConfig>().FindAsync([ReminderConfig.SingletonId], ct);
         if (existing is null)
         {
-            context.Set<ReminderConfig>().Add(config);
+            context.Set<ReminderConfig>().Add(new ReminderConfig
+            {
+                Id = ReminderConfig.SingletonId,
+                DailyStudyReminderTime = config.DailyStudyReminderTime,
+                EventReminderDaysBefore = config.EventReminderDaysBefore,
+                IsEnabled = config.IsEnabled,
+            });
         }
         else
         {

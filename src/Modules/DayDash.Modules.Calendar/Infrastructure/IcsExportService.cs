@@ -4,8 +4,8 @@ using DayDash.Modules.Calendar.Domain;
 
 namespace DayDash.Modules.Calendar.Infrastructure;
 
-public sealed class IcsExportService : IExportService
+public sealed class IcsExportService(TimeProvider timeProvider) : IExportService
 {
     public async Task ExportToIcsAsync(IEnumerable<CalendarEvent> events, string filePath, CancellationToken ct = default)
-        => await File.WriteAllTextAsync(filePath, IcsBuilder.Build(events), ct);
+        => await File.WriteAllTextAsync(filePath, IcsBuilder.Build(events, timeProvider.GetUtcNow()), ct);
 }

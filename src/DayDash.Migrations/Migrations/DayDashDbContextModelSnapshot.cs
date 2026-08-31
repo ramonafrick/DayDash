@@ -183,9 +183,7 @@ namespace DayDash.Migrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MinutesPerGoal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(15);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()

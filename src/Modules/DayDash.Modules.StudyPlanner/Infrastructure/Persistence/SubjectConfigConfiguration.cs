@@ -12,6 +12,8 @@ internal sealed class SubjectConfigConfiguration : IEntityTypeConfiguration<Subj
         builder.HasKey(s => s.Id);
 
         builder.Property(s => s.Name).IsRequired().HasMaxLength(200);
-        builder.Property(s => s.MinutesPerGoal).HasDefaultValue(SubjectConfig.DefaultMinutesPerGoal);
+        // No HasDefaultValue: the CLR property default (15) covers new rows, and a store default
+        // would make an explicit MinutesPerGoal of 0 silently become 15 on INSERT only.
+        builder.Property(s => s.MinutesPerGoal).IsRequired();
     }
 }

@@ -63,7 +63,7 @@ namespace DayDash.Migrations.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    MinutesPerGoal = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 15)
+                    MinutesPerGoal = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
